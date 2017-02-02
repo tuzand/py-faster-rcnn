@@ -11,6 +11,8 @@ __sets = {}
 
 from datasets.pascal_voc import pascal_voc
 from datasets.coco import coco
+from datasets.fl import fl
+from datasets.fl_detection import fl_detection
 import numpy as np
 
 # Set up voc_<year>_<split> using selective search "fast" mode
@@ -30,6 +32,17 @@ for year in ['2015']:
     for split in ['test', 'test-dev']:
         name = 'coco_{}_{}'.format(year, split)
         __sets[name] = (lambda split=split, year=year: coco(split, year))
+
+fl_devkit_path = '/home/andras/data/datasets/FL32/FlickrLogos-v2/fl/fl_devkit'
+for split in ['train', 'test', 'test_logo', 'trainval']:
+    name = '{}_{}'.format('fl', split)
+    __sets[name] = (lambda split=split: fl(split, fl_devkit_path))
+
+fl_detection_devkit_path = '/home/andras/data/datasets/FL32/FlickrLogos-v2/fl/fl_devkit_detection'
+for split in ['train', 'test', 'test_logo', 'trainval']:
+    name = '{}_{}'.format('fl_detection', split)
+    __sets[name] = (lambda split=split: fl_detection(split, fl_detection_devkit_path))
+
 
 def get_imdb(name):
     """Get an imdb (image database) by name."""

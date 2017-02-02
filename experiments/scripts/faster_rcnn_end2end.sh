@@ -23,6 +23,13 @@ EXTRA_ARGS=${array[@]:3:$len}
 EXTRA_ARGS_SLUG=${EXTRA_ARGS// /_}
 
 case $DATASET in
+  fl)
+    TRAIN_IMDB="fl_train"
+    TEST_IMDB="fl_test"
+    PT_DIR="fl"
+    NET_INIT=data/imagenet_models/VGG_CNN_M_1024.caffemodel
+    ITERS=20000
+    ;;
   pascal_voc)
     TRAIN_IMDB="voc_2007_trainval"
     TEST_IMDB="voc_2007_test"

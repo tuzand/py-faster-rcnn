@@ -260,9 +260,19 @@ def test_net(net, imdb, max_per_image=100, thresh=0.05, vis=False):
 
         _t['misc'].tic()
         # skip j = 0, because it's the background class
+        max_score = 0
+        cls = []
+        logo_scores = None
         for j in xrange(1, imdb.num_classes):
             inds = np.where(scores[:, j] > thresh)[0]
             cls_scores = scores[inds, j]
+            if len(scores[inds, j]) > 0:
+                max_class_score = scores[inds, j].max()
+                if max_class_score > 0.7 and max_class_score > max_score:
+                    max_score = max_class_score
+                    cls = j
+                    bbox_index = inds[scores[inds, j].argmax()]
+                    logo_scores = scores[bbox_index, :]
             cls_boxes = boxes[inds, j*4:(j+1)*4]
             cls_dets = np.hstack((cls_boxes, cls_scores[:, np.newaxis])) \
                 .astype(np.float32, copy=False)
@@ -272,6 +282,9 @@ def test_net(net, imdb, max_per_image=100, thresh=0.05, vis=False):
                 vis_detections(im, imdb.classes[j], cls_dets)
             all_boxes[j][i] = cls_dets
 
+        print logo_scores
+        if logo_scores == None:
+            print "no-logo"
         # Limit to max_per_image detections *over all classes*
         if max_per_image > 0:
             image_scores = np.hstack([all_boxes[j][i][:, -1]
