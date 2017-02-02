@@ -4,6 +4,7 @@ lib/build
 lib/pycocotools/_mask.c
 lib/pycocotools/_mask.so
 *.caffemodel
+*.tgz
 
 output/
 result/
