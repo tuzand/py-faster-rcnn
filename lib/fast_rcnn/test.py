@@ -105,7 +105,7 @@ def _get_blobs(im, rois):
         blobs['rois'] = _get_rois_blob(rois, im_scale_factors)
     return blobs, im_scale_factors
 
-def im_detect(net, im, boxes=None):
+def im_detect(net, im, detection=False, boxes=None):
     """Detect object classes in an image given object proposals.
 
     Arguments:
@@ -166,6 +166,10 @@ def im_detect(net, im, boxes=None):
     else:
         # use softmax estimated probabilities
         scores = blobs_out['cls_prob']
+        scores_det = None
+        if detection:
+            blobs_out['cls_prob_det']
+        features = net.blobs['pool5'].data
 
     if cfg.TEST.BBOX_REG:
         # Apply bounding-box regression deltas
@@ -181,7 +185,7 @@ def im_detect(net, im, boxes=None):
         scores = scores[inv_index, :]
         pred_boxes = pred_boxes[inv_index, :]
 
-    return scores, pred_boxes
+    return scores, pred_boxes, features, scores_det
 
 def vis_detections(im, class_name, dets, thresh=0.3):
     """Visual debugging of detections."""

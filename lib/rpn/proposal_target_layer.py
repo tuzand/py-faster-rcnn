@@ -13,7 +13,7 @@ from fast_rcnn.config import cfg
 from fast_rcnn.bbox_transform import bbox_transform
 from utils.cython_bbox import bbox_overlaps
 
-DEBUG = True
+DEBUG = False
 
 class ProposalTargetLayer(caffe.Layer):
     """
@@ -59,10 +59,6 @@ class ProposalTargetLayer(caffe.Layer):
                 'Only single item batches are supported'
 
         num_images = cfg.TRAIN.IMS_PER_BATCH
-        print "ims per batch"
-        print cfg.TRAIN.IMS_PER_BATCH
-        print "batch size"
-        print cfg.TRAIN.BATCH_SIZE
         rois_per_image = cfg.TRAIN.BATCH_SIZE / num_images
         fg_rois_per_image = np.round(cfg.TRAIN.FG_FRACTION * rois_per_image)
 
@@ -71,22 +67,7 @@ class ProposalTargetLayer(caffe.Layer):
         labels, rois, bbox_targets, bbox_inside_weights = _sample_rois(
             all_rois, gt_boxes, fg_rois_per_image,
             rois_per_image, self._num_classes)
-        print "labels:"
-        print labels
-        '''print "rois:"
-        print rois
-        print "bbox_targets:"
-        print bbox_targets
-        print "bbox_inside_weights:"
-        print bbox_inside_weights
-        print "rois_per_image:"'''
-        if not (rois_per_image == 128):
-                print "rois:"
-                print rois_per_image
-                import sys
-                sys.exit(0)
-
-
+        
         if DEBUG:
             print 'num fg: {}'.format((labels > 0).sum())
             print 'num bg: {}'.format((labels == 0).sum())
@@ -104,7 +85,7 @@ class ProposalTargetLayer(caffe.Layer):
         # classification labels
         top[1].reshape(*labels.shape)
         top[1].data[...] = labels
-
+        
         # bbox_targets
         top[2].reshape(*bbox_targets.shape)
         top[2].data[...] = bbox_targets

@@ -56,7 +56,7 @@ class fl_detection(imdb):
         Construct an image path from the image's "index" identifier.
         """
         for ext in self._image_ext:
-            image_path = os.path.join(self._data_path, '../../Images',
+            image_path = os.path.join(self._data_path, 'Images',
                                   index + ext)
             if os.path.exists(image_path):
                 break
@@ -70,7 +70,7 @@ class fl_detection(imdb):
         """
         # Example path to image set file:
         # self._data_path + /ImageSets/val.txt
-        image_set_file = os.path.join(self._data_path, '../../ImageSets', 
+        image_set_file = os.path.join(self._data_path, 'ImageSets', 
                                       self._image_set + '.txt')
         assert os.path.exists(image_set_file), \
                 'Path does not exist: {}'.format(image_set_file)

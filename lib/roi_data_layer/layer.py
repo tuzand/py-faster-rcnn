@@ -55,7 +55,6 @@ class RoIDataLayer(caffe.Layer):
         If cfg.TRAIN.USE_PREFETCH is True, then blobs will be computed in a
         separate process and made available through self._blob_queue.
         """
-        print "minibatch"
         if cfg.TRAIN.USE_PREFETCH:
             return self._blob_queue.get()
         else:

@@ -34,12 +34,12 @@ for year in ['2015']:
         __sets[name] = (lambda split=split, year=year: coco(split, year))
 
 fl_devkit_path = '/home/andras/data/datasets/FL32/FlickrLogos-v2/fl/fl_devkit'
-for split in ['train', 'test', 'test_logo', 'trainval']:
+for split in ['train', 'test', 'test_logo', 'trainval', 'val_logo']:
     name = '{}_{}'.format('fl', split)
     __sets[name] = (lambda split=split: fl(split, fl_devkit_path))
 
 fl_detection_devkit_path = '/home/andras/data/datasets/FL32/FlickrLogos-v2/fl/fl_devkit_detection'
-for split in ['train', 'test', 'test_logo', 'trainval']:
+for split in ['train_det', 'test', 'test_logo', 'trainval', 'val_logo_det']:
     name = '{}_{}'.format('fl_detection', split)
     __sets[name] = (lambda split=split: fl_detection(split, fl_detection_devkit_path))
 

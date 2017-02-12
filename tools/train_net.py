@@ -101,12 +101,23 @@ if __name__ == '__main__':
     caffe.set_mode_gpu()
     caffe.set_device(args.gpu_id)
 
+    #imdb, roidb = combined_roidb(args.imdb_name)
+    #print '{:d} roidb entries'.format(len(roidb))
+
+    imdb_det, roidb_det = combined_roidb('fl_detection_train_det+fl_detection_val_logo_det')
+    #roidb_det = None
+    print '{:d} roidb entries'.format(len(roidb_det))
+
     imdb, roidb = combined_roidb(args.imdb_name)
     print '{:d} roidb entries'.format(len(roidb))
 
-    output_dir = get_output_dir(imdb)
+    #output_dir = get_output_dir(imdb)
+    #output_dir = '/home/andras/github/logoretrieval/py_faster_rcnn/output/faster_rcnn_end2end/siam_fl_trainvalonly'
+    output_dir = '/home/andras/github/logoretrieval/py_faster_rcnn/output/faster_rcnn_end2end/extended_v2'
+
     print 'Output will be saved to `{:s}`'.format(output_dir)
 
-    train_net(args.solver, roidb, output_dir,
+    print args.pretrained_model
+    train_net(args.solver, roidb=roidb, roidb_det=roidb_det, output_dir=output_dir,
               pretrained_model=args.pretrained_model,
               max_iters=args.max_iters)
