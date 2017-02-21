@@ -10,29 +10,27 @@ import cPickle
 import numpy as np
 
 def parse_rec(filename):
-    """ Parse an FL annotation file """
+    """ Parse an Logo annotation file """
     objects = []
     with open(filename) as f:
         lines = f.readlines()
-    #objs = re.findall('\d+ \d+ \d+ \d+', data)
-    #brand = data.split()[-1]
 
     for ix, line in enumerate(lines):
-        l = line.split()
         obj_struct = {}
+        l = line.split()
         obj_struct['bbox'] = [int(l[0]),
                               int(l[1]),
                               int(l[2]),
                               int(l[3])]
-        obj_struct['name'] = l[4]
-        print obj_struct['bbox']
-        print obj_struct['name']
+        obj_struct['name'] = l[-1]
+        obj_struct['bbox']
+        obj_struct['name']
         obj_struct['difficult'] = 0
         objects.append(obj_struct)
     return objects
 
-def fl_ap(rec, prec, use_07_metric=False):
-    """ ap = fl_ap(rec, prec, [use_07_metric])
+def logo_ap(rec, prec, use_07_metric=False):
+    """ ap = logo_ap(rec, prec, [use_07_metric])
     Compute VOC AP given precision and recall.
     If use_07_metric is true, uses the
     VOC 07 11 point method (default:False).
@@ -64,14 +62,14 @@ def fl_ap(rec, prec, use_07_metric=False):
         ap = np.sum((mrec[i + 1] - mrec[i]) * mpre[i + 1])
     return ap
 
-def fl_eval(detpath,
+def logo_eval(detpath,
              annopath,
              imagesetfile,
              classname,
              cachedir,
              ovthresh=0.5,
              use_07_metric=False):
-    """rec, prec, ap = fl_eval(detpath,
+    """rec, prec, ap = logo_eval(detpath,
                                 annopath,
                                 imagesetfile,
                                 classname,
@@ -116,7 +114,6 @@ def fl_eval(detpath,
         with open(cachefile, 'w') as f:
             cPickle.dump(recs, f)
     else:
-        print "exists"
         # load
         with open(cachefile, 'r') as f:
             recs = cPickle.load(f)
@@ -147,8 +144,8 @@ def fl_eval(detpath,
     # sort by confidence
     sorted_ind = np.argsort(-confidence)
     sorted_scores = np.sort(-confidence)
-    print BB
     print sorted_ind
+    print BB
     BB = BB[sorted_ind, :]
     image_ids = [image_ids[x] for x in sorted_ind]
 
@@ -201,6 +198,6 @@ def fl_eval(detpath,
     # avoid divide by zero in case the first detection matches a difficult
     # ground truth
     prec = tp / np.maximum(tp + fp, np.finfo(np.float64).eps)
-    ap = fl_ap(rec, prec, use_07_metric)
+    ap = logo_ap(rec, prec, use_07_metric)
 
     return rec, prec, ap

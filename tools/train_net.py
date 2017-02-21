@@ -19,6 +19,7 @@ import argparse
 import pprint
 import numpy as np
 import sys
+import os
 
 def parse_args():
     """
@@ -104,7 +105,8 @@ if __name__ == '__main__':
     #imdb, roidb = combined_roidb(args.imdb_name)
     #print '{:d} roidb entries'.format(len(roidb))
 
-    imdb_det, roidb_det = combined_roidb('fl_detection_train_det+fl_detection_val_logo_det')
+    #imdb_det, roidb_det = combined_roidb('fl27_detection_train')
+    imdb_det, roidb_det = combined_roidb('fl_detection_train+fl_detection_val_logo+fl27_detection_train+bl_detection_train+toplogo_detection_train')
     #roidb_det = None
     print '{:d} roidb entries'.format(len(roidb_det))
 
@@ -113,7 +115,9 @@ if __name__ == '__main__':
 
     #output_dir = get_output_dir(imdb)
     #output_dir = '/home/andras/github/logoretrieval/py_faster_rcnn/output/faster_rcnn_end2end/siam_fl_trainvalonly'
-    output_dir = '/home/andras/github/logoretrieval/py_faster_rcnn/output/faster_rcnn_end2end/extended_v2'
+    output_dir = '/home/andras/github/logoretrieval/py_faster_rcnn/output/faster_rcnn_end2end/allnet_sharedconv'
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
 
     print 'Output will be saved to `{:s}`'.format(output_dir)
 

@@ -185,7 +185,10 @@ def im_detect(net, im, detection=False, boxes=None):
         scores = scores[inv_index, :]
         pred_boxes = pred_boxes[inv_index, :]
 
-    return scores, pred_boxes, features, scores_det
+    if detection:
+        return scores, pred_boxes, features, scores_det
+    else:
+        return scores, pred_boxes
 
 def vis_detections(im, class_name, dets, thresh=0.3):
     """Visual debugging of detections."""
