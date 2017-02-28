@@ -26,35 +26,42 @@ class logo(imdb):
         self._image_set = image_set
         self._devkit_path = devkit_path
         self._data_path = os.path.join(self._devkit_path, 'data')
-        flickrlogo32 = ('adidas', 'apple', 'bmw', 'chimay', 'corona', 'erdinger', # FlickrLogos-32
+        flickrlogo32 = ( 'adidas', 'apple', 'bmw', 'chimay', 'corona', 'erdinger', # FlickrLogos-32
                          'fedex', 'ford', 'google', 'heineken', 'milka', 'paulaner',
                          'rittersport', 'singha', 'stellaartois', 'tsingtao', 'aldi',
                          'becks', 'carlsberg', 'cocacola', 'dhl', 'esso', 'ferrari',
                          'fosters', 'guiness', 'hp', 'nvidia', 'pepsi', 'shell',
                          'starbucks', 'texaco', 'ups')
-        other_datasets = (
-                         'adidas', 'chanel', 'gucci', 'hh', 'lacoste', # TopLogo-10
-                         'mk', 'nike', 'prada', 'puma', 'supreme',
-                         'adidas', 'adidas-text', 'airness', 'base', 'bfgoodrich', 'bik', # BelgaLogos
+
+        bl = (           'adidas', 'adidas-text', 'airness', 'base', 'bfgoodrich', 'bik', # BelgaLogos
                          'bouigues', 'bridgestone', 'bridgestone-text', 'carglass',
                          'citroen', 'citroen-text', 'cocacola', 'cofidis', 'dexia',
                          'eleclerc', 'ferrari', 'gucci', 'kia', 'mercedes', 'nike',
                          'peugeot', 'puma', 'puma-text', 'quick', 'reebok', 'roche',
                          'shell', 'sncf', 'standard_liege', 'stellaartois', 'tnt', 'total',
-                         'us_president', 'umbro', 'veolia', 'vrt',
-                         'adidas', 'apple', 'bmw', 'citroen', 'cocacola', 'dhl', # FlickrLogos-27
+                         'us_president', 'umbro', 'veolia', 'vrt')
+
+        toplogo = (      'adidas', 'chanel', 'gucci', 'hh', 'lacoste', # TopLogo-10
+                         'mk', 'nike', 'prada', 'puma', 'supreme')
+
+        fl27 = (         'adidas', 'apple', 'bmw', 'citroen', 'cocacola', 'dhl', # FlickrLogos-27
                          'fedex', 'ferrari', 'ford', 'google', 'heineken', 'hp',
                          'intel', 'mcdonalds', 'mini', 'nbc', 'nike', 'pepsi',
                          'porsche', 'puma', 'redbull', 'sprite', 'starbucks',
                          'texaco', 'unicef', 'vodafone', 'yahoo'
                          )
-        other_datasets = list(Set(other_datasets))
+        
+        #other_datasets = list()
+        #other_datasets = other_datasets.extend(bl).extend(toplogo).extend(fl27)
+        #other_darasets = Set(other_datasets))
         self._classes = list()
         self._classes.append('__background__') # always index 0
-        self._classes.extend(flickrlogo32)
-        otherminusflickr = [brand for brand in other_datasets if brand not in flickrlogo32]
-        self._classes.extend(otherminusflickr)
+        self._classes.extend(bl)
+        #self._classes.extend(flickrlogo32)
+        #otherminusflickr = [brand for brand in other_datasets if brand not in flickrlogo32]
+        #self._classes.extend(otherminusflickr)
         self._class_to_ind = dict(zip(self.classes, xrange(self.num_classes)))
+        print self._class_to_ind
         self._image_ext = ['.jpg']
         self._image_index = self._load_image_set_index()
         self._salt = str(uuid.uuid4())

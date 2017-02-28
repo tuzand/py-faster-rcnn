@@ -135,11 +135,20 @@ def _get_image_blob(roidb, scale_inds):
     im_scales = []
     for i in xrange(num_images):
         im = cv2.imread(roidb[i]['image'])
+        
+        if im.shape[2] == 1:
+            print 'gray'
+            im = cv2.cvtColor(im, cv2.COLOR_GRAY2BGR)
         if roidb[i]['flipped']:
             im = im[:, ::-1, :]
         target_size = cfg.TRAIN.SCALES[scale_inds[i]]
         im, im_scale = prep_im_for_blob(im, cfg.PIXEL_MEANS, target_size,
                                         cfg.TRAIN.MAX_SIZE)
+        #h, w = im.shape[:2]
+        #if (h == 92 and w == 1000) or (h == 1000 and w == 92):
+        #    print roidb[i]['image']
+        #    import sys
+        #    sys.exit(0)
         im_scales.append(im_scale)
         processed_ims.append(im)
 

@@ -40,12 +40,6 @@ for split in ['fl_train', 'fl_test', 'fl_test_logo', 'fl_trainval', 'fl_val_logo
     name = '{}'.format(split)
     __sets[name] = (lambda split=split: logo(split, fl_path))
 
-flbl_path = '/home/andras/data/datasets/FLBL/FLBL'
-for split in ['flbl_train_all', 'flbl_train', 'flbl_test']:
-    name = '{}'.format(split)
-    __sets[name] = (lambda split=split: logo(split, flbl_path))
-
-
 for split in ['fl_test_logo']:
     name = '{}'.format(split)
     __sets[name] = (lambda split=split: fl(split, fl_path))
@@ -61,7 +55,7 @@ for split in ['toplogo_train']:
     __sets[name] = (lambda split=split: logo(split, toplogo_path))
 
 bl_path = '/home/andras/data/datasets/BL/BL'
-for split in ['bl_train_all', 'bl_train', 'bl_test']:
+for split in ['bl_train_all, ''bl_train', 'bl_test']:
     name = '{}'.format(split)
     __sets[name] = (lambda split=split: logo(split, bl_path))
 

@@ -40,7 +40,7 @@ def parse_args():
                         default=None, type=str)
     parser.add_argument('--cfg', dest='cfg_file',
                         help='optional config file',
-                        default=None, type=str)
+                        default='experiments/cfgs/faster_rcnn_end2end.yml', type=str)
     parser.add_argument('--imdb', dest='imdb_name',
                         help='dataset to train on',
                         default='voc_2007_trainval', type=str)
@@ -105,17 +105,17 @@ if __name__ == '__main__':
     #imdb, roidb = combined_roidb(args.imdb_name)
     #print '{:d} roidb entries'.format(len(roidb))
 
-    #imdb_det, roidb_det = combined_roidb('fl27_detection_train')
-    imdb_det, roidb_det = combined_roidb('fl_detection_train+fl_detection_val_logo+fl27_detection_train+bl_detection_train+toplogo_detection_train')
+    roidb_det = None
+    #imdb_det, roidb_det = combined_roidb('bl_train')
+    #imdb_det, roidb_det = combined_roidb('metu_sample+fl_detection_train+fl_detection_val_logo+fl27_detection_train+bl_detection_train+toplogo_detection_train')
     #roidb_det = None
-    print '{:d} roidb entries'.format(len(roidb_det))
-
-    imdb, roidb = combined_roidb(args.imdb_name)
+    
+    #imdb, roidb = combined_roidb(args.imdb_name)
+    imdb, roidb = combined_roidb('flbl_train_all')
     print '{:d} roidb entries'.format(len(roidb))
 
     #output_dir = get_output_dir(imdb)
-    #output_dir = '/home/andras/github/logoretrieval/py_faster_rcnn/output/faster_rcnn_end2end/siam_fl_trainvalonly'
-    output_dir = '/home/andras/github/logoretrieval/py_faster_rcnn/output/faster_rcnn_end2end/allnet_sharedconv'
+    output_dir = '/home/andras/github/logoretrieval/py_faster_rcnn/output/faster_rcnn_end2end/flbltrain_simple'
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 

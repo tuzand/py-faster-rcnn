@@ -169,7 +169,7 @@ def im_detect(net, im, detection=False, boxes=None):
         scores_det = None
         if detection:
             blobs_out['cls_prob_det']
-        features = net.blobs['pool5'].data
+        features = net.blobs['cls_prob'].data
 
     if cfg.TEST.BBOX_REG:
         # Apply bounding-box regression deltas
@@ -263,6 +263,8 @@ def test_net(net, imdb, max_per_image=100, thresh=0.05, vis=False):
         im = cv2.imread(imdb.image_path_at(i))
         _t['im_detect'].tic()
         scores, boxes = im_detect(net, im, box_proposals)
+        np.set_printoptions(threshold=np.nan)
+        print imdb.image_path_at(i)
         _t['im_detect'].toc()
 
         _t['misc'].tic()
@@ -289,7 +291,9 @@ def test_net(net, imdb, max_per_image=100, thresh=0.05, vis=False):
                 vis_detections(im, imdb.classes[j], cls_dets)
             all_boxes[j][i] = cls_dets
 
-        print logo_scores
+        if logo_scores != None:
+            print str(np.argmax(logo_scores)) + " "  + str(logo_scores[np.argmax(logo_scores)])
+
         if logo_scores == None:
             print "no-logo"
         # Limit to max_per_image detections *over all classes*

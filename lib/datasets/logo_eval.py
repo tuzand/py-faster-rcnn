@@ -146,7 +146,8 @@ def logo_eval(detpath,
     sorted_scores = np.sort(-confidence)
     print sorted_ind
     print BB
-    BB = BB[sorted_ind, :]
+    if BB.size:
+        BB = BB[sorted_ind, :]
     image_ids = [image_ids[x] for x in sorted_ind]
 
     # go down dets and mark TPs and FPs
