@@ -32,7 +32,6 @@ def bbox_transform_inv(boxes, deltas):
         return np.zeros((0, deltas.shape[1]), dtype=deltas.dtype)
 
     boxes = boxes.astype(deltas.dtype, copy=False)
-
     widths = boxes[:, 2] - boxes[:, 0] + 1.0
     heights = boxes[:, 3] - boxes[:, 1] + 1.0
     ctr_x = boxes[:, 0] + 0.5 * widths

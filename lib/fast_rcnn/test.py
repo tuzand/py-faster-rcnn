@@ -18,6 +18,7 @@ from fast_rcnn.nms_wrapper import nms
 import cPickle
 from utils.blob import im_list_to_blob
 import os
+import sys
 
 def _get_image_blob(im):
     """Converts an image into a network input.
@@ -137,7 +138,7 @@ def im_detect(net, im, detection=False, boxes=None):
         blobs['im_info'] = np.array(
             [[im_blob.shape[2], im_blob.shape[3], im_scales[0]]],
             dtype=np.float32)
-
+    
     # reshape network inputs
     net.blobs['data'].reshape(*(blobs['data'].shape))
     if cfg.TEST.HAS_RPN:
@@ -168,9 +169,14 @@ def im_detect(net, im, detection=False, boxes=None):
         scores = blobs_out['cls_prob']
         scores_det = None
         if detection:
-            blobs_out['cls_prob_det']
+            scores_det = blobs_out['cls_prob_det']
+            #scores_det = net.blobs['rpn_roi_scores'].data
+            #det_boxes = net.blobs['rois'].data / im_scales
+            box_det_deltas = blobs_out['bbox_pred_det']
+            pred_det_boxes = bbox_transform_inv(boxes, box_det_deltas)
+            pred_det_boxes = clip_boxes(pred_det_boxes, im.shape)
         features = net.blobs['cls_prob'].data
-
+        
     if cfg.TEST.BBOX_REG:
         # Apply bounding-box regression deltas
         box_deltas = blobs_out['bbox_pred']
@@ -184,9 +190,9 @@ def im_detect(net, im, detection=False, boxes=None):
         # Map scores and predictions back to the original set of boxes
         scores = scores[inv_index, :]
         pred_boxes = pred_boxes[inv_index, :]
-
     if detection:
-        return scores, pred_boxes, features, scores_det
+        return scores, pred_boxes, features, scores_det, pred_det_boxes
+        #return scores, pred_boxes, features, scores_det
     else:
         return scores, pred_boxes
 
@@ -241,7 +247,8 @@ def test_net(net, imdb, max_per_image=100, thresh=0.05, vis=False):
                  for _ in xrange(imdb.num_classes)]
 
     output_dir = get_output_dir(imdb, net)
-
+    import sys
+    
     # timers
     _t = {'im_detect' : Timer(), 'misc' : Timer()}
 
@@ -264,7 +271,6 @@ def test_net(net, imdb, max_per_image=100, thresh=0.05, vis=False):
         _t['im_detect'].tic()
         scores, boxes = im_detect(net, im, box_proposals)
         np.set_printoptions(threshold=np.nan)
-        print imdb.image_path_at(i)
         _t['im_detect'].toc()
 
         _t['misc'].tic()
@@ -283,8 +289,12 @@ def test_net(net, imdb, max_per_image=100, thresh=0.05, vis=False):
                     bbox_index = inds[scores[inds, j].argmax()]
                     logo_scores = scores[bbox_index, :]
             cls_boxes = boxes[inds, j*4:(j+1)*4]
+            #print 'scores'
+            #print cls_scores
             cls_dets = np.hstack((cls_boxes, cls_scores[:, np.newaxis])) \
                 .astype(np.float32, copy=False)
+            #print 'dets'
+            #print cls_dets
             keep = nms(cls_dets, cfg.TEST.NMS)
             cls_dets = cls_dets[keep, :]
             if vis:

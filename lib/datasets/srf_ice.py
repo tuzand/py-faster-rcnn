@@ -17,18 +17,22 @@ import utils.cython_bbox
 import cPickle
 import subprocess
 import uuid
-from logo_detection_eval import logo_detection_eval
-from sets import Set
+from srf_ice_eval import srf_ice_eval
 
-class logo_detection(imdb):
+class srf_ice(imdb):
     def __init__(self, image_set, devkit_path):
         imdb.__init__(self, image_set)
         self._image_set = image_set
         self._devkit_path = devkit_path
         self._data_path = os.path.join(self._devkit_path, 'data')
         self._classes = ('__background__', # always index 0
-                         'logo')
+                         'bauer', 'gdrive', 'zurich', 'skoda', 'srg_ssr',
+                         'raiffeisen', 'sponser', 'orange', 'tissot',
+                         'swissairlines', 'sporttip', 'postfinance', 'srf',
+                         'fischer', 'nexus', 'teleclub', 'zepter',
+                         'belarusbank', 'swisslos')
         self._class_to_ind = dict(zip(self.classes, xrange(self.num_classes)))
+        print self._class_to_ind
         self._image_ext = ['.png']
         self._image_index = self._load_image_set_index()
         self._salt = str(uuid.uuid4())
@@ -92,7 +96,7 @@ class logo_detection(imdb):
             print '{} gt roidb loaded from {}'.format(self.name, cache_file)
             return roidb
 
-        gt_roidb = [self._load_logo_detection_annotation(index)
+        gt_roidb = [self._load_srf_ice_annotation(index)
                     for index in self.image_index]
         with open(cache_file, 'wb') as fid:
             cPickle.dump(gt_roidb, fid, cPickle.HIGHEST_PROTOCOL)
@@ -116,16 +120,21 @@ class logo_detection(imdb):
             box_list = cPickle.load(f)
         return self.create_roidb_from_box_list(box_list, gt_roidb)
 
-    def _load_logo_detection_annotation(self, index):
+    def _load_srf_ice_annotation(self, index):
         """
-        Load image and bounding boxes info from txt files of Logo Detection files.
+        Load image and bounding boxes info from txt files of SRF ICE.
         """
         filename = os.path.join(self._data_path, 'Annotations', index + '.png.bboxes.txt')
         # print 'Loading: {}'.format(filename)
 	with open(filename) as f:
-            lines = f.readlines()
+            data = f.read()
 
-        num_objs = len(lines)
+	import re
+	objs = re.findall('\d+ \d+ \d+ \d+', data)
+        brand = data.split()[-1]
+        print objs
+        print brand
+        num_objs = len(objs)
 
         boxes = np.zeros((num_objs, 4), dtype=np.uint16)
         gt_classes = np.zeros((num_objs), dtype=np.int32)
@@ -135,14 +144,13 @@ class logo_detection(imdb):
         seg_areas = np.zeros((num_objs), dtype=np.float32)
 
         # Load object bounding boxes into a data frame.
-        for ix, line in enumerate(lines):
-            l = line.split()
+        for ix, obj in enumerate(objs):
             # Make pixel indexes 0-based
-	    x1 = int(l[0])
-            y1 = int(l[1])
-            x2 = int(l[2])
-            y2 = int(l[3])
-            brand = l[-1]
+	    coor = re.findall('\d+', obj)
+            x1 = float(coor[0])
+            y1 = float(coor[1])
+            x2 = float(coor[2])
+            y2 = float(coor[3])
             cls = self._class_to_ind[brand]
             boxes[ix, :] = [x1, y1, x2, y2]
             gt_classes[ix] = cls
@@ -157,12 +165,12 @@ class logo_detection(imdb):
                 'flipped' : False,
                 'seg_areas' : seg_areas}
 
-    def _write_logo_detection_results_file(self, all_boxes):
+    def _write_srf_ice_results_file(self, all_boxes):
         for cls_ind, cls in enumerate(self.classes):
             if cls == '__background__':
                 continue
             print 'Writing {} results file'.format(cls)
-            filename = self._get_logo_detection_results_file_template().format(cls)
+            filename = self._get_srf_ice_results_file_template().format(cls)
             with open(filename, 'wt') as f:
                 for im_ind, index in enumerate(self.image_index):
                     dets = all_boxes[cls_ind][im_ind]
@@ -181,13 +189,13 @@ class logo_detection(imdb):
                                        dets[k, 2] + 1, dets[k, 3] + 1))
 
     def evaluate_detections(self, all_boxes, output_dir):
-        self._write_logo_detection_results_file(all_boxes)
+        self._write_srf_ice_results_file(all_boxes)
         self._do_python_eval(output_dir)
         if self.config['cleanup']:
             for cls in self._classes:
                 if cls == '__background__':
                     continue
-                filename = self._get_logo_detection_results_file_template().format(cls)
+                filename = self._get_srf_ice_results_file_template().format(cls)
                 os.remove(filename)
 
     def _get_comp_id(self):
@@ -195,7 +203,7 @@ class logo_detection(imdb):
             else self._comp_id)
         return comp_id
 
-    def _get_logo_detection_results_file_template(self):
+    def _get_srf_ice_results_file_template(self):
         # INRIAdevkit/results/comp4-44503_det_test_{%s}.txt
         filename = self._get_comp_id() + '_det_' + self._image_set + '_{:s}.txt'
         try:
@@ -227,8 +235,8 @@ class logo_detection(imdb):
         for i, cls in enumerate(self._classes):
             if cls == '__background__':
                 continue
-            filename = self._get_logo_detection_results_file_template().format(cls)
-            rec, prec, ap = logo_detection_eval(
+            filename = self._get_srf_ice_results_file_template().format(cls)
+            rec, prec, ap = srf_ice_eval(
                 filename, annopath, imagesetfile, cls, cachedir, ovthresh=0.5)
             aps += [ap]
             print('AP for {} = {:.4f}'.format(cls, ap))

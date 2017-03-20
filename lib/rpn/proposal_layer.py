@@ -39,8 +39,7 @@ class ProposalLayer(caffe.Layer):
         # (n, x1, y1, x2, y2) specifying an image batch index n and a
         # rectangle (x1, y1, x2, y2)
         top[0].reshape(1, 5)
-
-        # scores blob: holds scores for R regions of interest
+         # scores blob: holds scores for R regions of interest
         if len(top) > 1:
             top[1].reshape(1, 1, 1, 1)
 
@@ -136,7 +135,7 @@ class ProposalLayer(caffe.Layer):
         if pre_nms_topN > 0:
             order = order[:pre_nms_topN]
         proposals = proposals[order, :]
-        scores = scores[order]
+	scores = scores[order]
 
         # 6. apply nms (e.g. threshold = 0.7)
         # 7. take after_nms_topN (e.g. 300)
@@ -154,7 +153,7 @@ class ProposalLayer(caffe.Layer):
         blob = np.hstack((batch_inds, proposals.astype(np.float32, copy=False)))
         top[0].reshape(*(blob.shape))
         top[0].data[...] = blob
-
+        
         # [Optional] output scores blob
         if len(top) > 1:
             top[1].reshape(*(scores.shape))

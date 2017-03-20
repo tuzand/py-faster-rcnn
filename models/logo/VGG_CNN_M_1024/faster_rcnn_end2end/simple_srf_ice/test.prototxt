@@ -406,32 +406,7 @@ layer {
     decay_mult: 0
   }
   inner_product_param {
-    num_output: 33
-    weight_filler {
-      type: "gaussian"
-      std: 0.01
-    }
-    bias_filler {
-      type: "constant"
-      value: 0
-    }
-  }
-}
-layer {
-  name: "cls_score_det"
-  type: "InnerProduct"
-  bottom: "fc7"
-  top: "cls_score_det"
-  param {
-    lr_mult: 1
-    decay_mult: 1
-  }
-  param {
-    lr_mult: 2
-    decay_mult: 0
-  }
-  inner_product_param {
-    num_output: 2
+    num_output: 20
     weight_filler {
       type: "gaussian"
       std: 0.01
@@ -456,32 +431,7 @@ layer {
     decay_mult: 0
   }
   inner_product_param {
-    num_output: 132
-    weight_filler {
-      type: "gaussian"
-      std: 0.001
-    }
-    bias_filler {
-      type: "constant"
-      value: 0
-    }
-  }
-}
-layer {
-  name: "bbox_pred_det"
-  type: "InnerProduct"
-  bottom: "fc7"
-  top: "bbox_pred_det"
-  param {
-    lr_mult: 1
-    decay_mult: 1
-  }
-  param {
-    lr_mult: 2
-    decay_mult: 0
-  }
-  inner_product_param {
-    num_output: 8
+    num_output: 80
     weight_filler {
       type: "gaussian"
       std: 0.001
@@ -498,10 +448,3 @@ layer {
   bottom: "cls_score"
   top: "cls_prob"
 }
-layer {
-  name: "cls_prob_det"
-  type: "Softmax"
-  bottom: "cls_score_det"
-  top: "cls_prob_det"
-}
-
