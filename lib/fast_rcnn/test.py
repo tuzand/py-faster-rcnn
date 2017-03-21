@@ -169,8 +169,8 @@ def im_detect(net, im, detection=False, boxes=None):
         scores = blobs_out['cls_prob']
         scores_det = None
         if detection:
-            scores_det = blobs_out['cls_prob_det']
-            #scores_det = net.blobs['rpn_roi_scores'].data
+            #scores_det = blobs_out['cls_prob_det']
+            scores_det = net.blobs['rpn_roi_scores'].data
             #det_boxes = net.blobs['rois'].data / im_scales
             box_det_deltas = blobs_out['bbox_pred_det']
             pred_det_boxes = bbox_transform_inv(boxes, box_det_deltas)

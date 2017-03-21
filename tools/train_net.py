@@ -106,16 +106,16 @@ if __name__ == '__main__':
     #print '{:d} roidb entries'.format(len(roidb))
 
     roidb_det = None
-    #imdb_det, roidb_det = combined_roidb('synmetumir_train')
+    imdb_det, roidb_det = combined_roidb('srf_ice_good_logo+srf_ice_good_occlusion_logo')
     #imdb_det, roidb_det = combined_roidb('metu_sample+fl_detection_train+fl_detection_val_logo+fl27_detection_train+bl_detection_train+toplogo_detection_train')
     #roidb_det = None
     
     #imdb, roidb = combined_roidb(args.imdb_name)
-    imdb, roidb = combined_roidb('srf_ice_good')
+    imdb, roidb = combined_roidb('srf_ice_good+srf_ice_good_occlusion')
     #print '{:d} roidb entries'.format(len(roidb))
 
     #output_dir = get_output_dir(imdb)
-    output_dir = '/home/andras/github/logoretrieval/py_faster_rcnn/output/faster_rcnn_end2end/srf_ice__simple'
+    output_dir = '/home/andras/github/logoretrieval/py_faster_rcnn/output/faster_rcnn_end2end/srf_ice_sharedconv_v2'
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 

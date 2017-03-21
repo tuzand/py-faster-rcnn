@@ -37,10 +37,25 @@ for year in ['2015']:
         name = 'coco_{}_{}'.format(year, split)
         __sets[name] = (lambda split=split, year=year: coco(split, year))
 
-srf_ice_path = '/home/andras/data/datasets/srf_ice/good'
+srf_ice_good_path = '/home/andras/data/datasets/srf_ice/good'
 for split in ['srf_ice_good']:
     name = '{}'.format(split)
-    __sets[name] = (lambda split=split: srf_ice(split, srf_ice_path))
+    __sets[name] = (lambda split=split: srf_ice(split, srf_ice_good_path))
+
+srf_ice_good_occlusion_path = '/home/andras/data/datasets/srf_ice/good_occlusion'
+for split in ['srf_ice_good_occlusion']:
+    name = '{}'.format(split)
+    __sets[name] = (lambda split=split: srf_ice(split, srf_ice_good_occlusion_path))
+
+srf_ice_good_logo_path = '/home/andras/data/datasets/srf_ice_logo/good'
+for split in ['srf_ice_good_logo']:
+    name = '{}'.format(split)
+    __sets[name] = (lambda split=split: logo_detection(split, srf_ice_good_logo_path))
+
+srf_ice_good_occlusion_logo_path = '/home/andras/data/datasets/srf_ice_logo/good_occlusion'
+for split in ['srf_ice_good_occlusion_logo']:
+    name = '{}'.format(split)
+    __sets[name] = (lambda split=split: logo_detection(split, srf_ice_good_occlusion_logo_path))
 
 srf_ski_path = '/home/andras/data/datasets/srf_ski/good'
 for split in ['srf_ski_good']:

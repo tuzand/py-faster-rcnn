@@ -407,32 +407,7 @@ layer {
     decay_mult: 0
   }
   inner_product_param {
-    num_output: 33
-    weight_filler {
-      type: "gaussian"
-      std: 0.01
-    }
-    bias_filler {
-      type: "constant"
-      value: 0
-    }
-  }
-}
-layer {
-  name: "cls_score_det"
-  type: "InnerProduct"
-  bottom: "fc7"
-  top: "cls_score_det"
-  param {
-    lr_mult: 1
-    decay_mult: 1
-  }
-  param {
-    lr_mult: 2
-    decay_mult: 0
-  }
-  inner_product_param {
-    num_output: 2
+    num_output: 20
     weight_filler {
       type: "gaussian"
       std: 0.01
@@ -457,7 +432,7 @@ layer {
     decay_mult: 0
   }
   inner_product_param {
-    num_output: 132
+    num_output: 80
     weight_filler {
       type: "gaussian"
       std: 0.001
@@ -469,9 +444,105 @@ layer {
   }
 }
 layer {
+  name: "cls_prob"
+  type: "Softmax"
+  bottom: "cls_score"
+  top: "cls_prob"
+}
+
+layer {
+  name: "fc6_det"
+  type: "InnerProduct"
+  bottom: "pool5"
+  top: "fc6_det"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 4096
+  }
+}
+layer {
+  name: "relu6_det"
+  type: "ReLU"
+  bottom: "fc6_det"
+  top: "fc6_det"
+}
+layer {
+  name: "drop6_det"
+  type: "Dropout"
+  bottom: "fc6_det"
+  top: "fc6_det"
+  dropout_param {
+    dropout_ratio: 0.5
+  }
+}
+layer {
+  name: "fc7_det"
+  type: "InnerProduct"
+  bottom: "fc6_det"
+  top: "fc7_det"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1024
+  }
+}
+layer {
+  name: "relu7_det"
+  type: "ReLU"
+  bottom: "fc7_det"
+  top: "fc7_det"
+}
+layer {
+  name: "drop7_det"
+  type: "Dropout"
+  bottom: "fc7_det"
+  top: "fc7_det"
+  dropout_param {
+    dropout_ratio: 0.5
+  }
+}
+layer {
+  name: "cls_score_det"
+  type: "InnerProduct"
+  bottom: "fc7_det"
+  top: "cls_score_det"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 2
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
   name: "bbox_pred_det"
   type: "InnerProduct"
-  bottom: "fc7"
+  bottom: "fc7_det"
   top: "bbox_pred_det"
   param {
     lr_mult: 1
@@ -494,15 +565,8 @@ layer {
   }
 }
 layer {
-  name: "cls_prob"
-  type: "Softmax"
-  bottom: "cls_score"
-  top: "cls_prob"
-}
-layer {
   name: "cls_prob_det"
   type: "Softmax"
   bottom: "cls_score_det"
   top: "cls_prob_det"
 }
-
