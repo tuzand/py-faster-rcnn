@@ -127,6 +127,11 @@ for split in ['synmetumir_train']:
     name = '{}'.format(split)
     __sets[name] = (lambda split=split: logo_detection(split, synmetumir_path))
 
+synmetuta_path = '/home/atuezkoe/datasets/SYN_METU_TA'
+for split in ['synmetu_ta_train_all']:
+    name = '{}'.format(split)
+    __sets[name] = (lambda split=split: logo_detection(split, synmetuta_path))
+
 def get_imdb(name):
     """Get an imdb (image database) by name."""
     if not __sets.has_key(name):

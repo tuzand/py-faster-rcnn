@@ -29,7 +29,7 @@ class logo_detection(imdb):
         self._classes = ('__background__', # always index 0
                          'logo')
         self._class_to_ind = dict(zip(self.classes, xrange(self.num_classes)))
-        self._image_ext = ['.png']
+        self._image_ext = ['.jpg']
         self._image_index = self._load_image_set_index()
         self._salt = str(uuid.uuid4())
         self._comp_id = 'comp4'
@@ -120,7 +120,7 @@ class logo_detection(imdb):
         """
         Load image and bounding boxes info from txt files of Logo Detection files.
         """
-        filename = os.path.join(self._data_path, 'Annotations', index + '.png.bboxes.txt')
+        filename = os.path.join(self._data_path, 'Annotations', index + '.jpg.bboxes.txt')
         # print 'Loading: {}'.format(filename)
 	with open(filename) as f:
             lines = f.readlines()
@@ -215,7 +215,7 @@ class logo_detection(imdb):
         annopath = os.path.join(
             self._data_path,
             'Annotations',
-            '{:s}.png.bboxes.txt')
+            '{:s}.jpg.bboxes.txt')
         imagesetfile = os.path.join(
             self._data_path,
             'ImageSets',
