@@ -108,16 +108,16 @@ if __name__ == '__main__':
     roidb_det = None
     #imdb_det, roidb_det = combined_roidb('srf_ice_good_logo+srf_ice_good_occlusion_logo')
     #imdb_det, roidb_det = combined_roidb('synmetu_ta_train_all')
-    #imdb_det, roidb_det = combined_roidb('metu_sample+fl_detection_train+fl_detection_val_logo+fl27_detection_train+bl_detection_train+toplogo_detection_train')
-    #roidb_det = None
-    
+    imdb_det, roidb_det = combined_roidb('fl_detection_train+fl_detection_val_logo+fl27_detection_train+bl_detection_train+toplogo_detection_train')
+        
     #imdb, roidb = combined_roidb(args.imdb_name)
-    imdb, roidb = combined_roidb('synmetu_ta_train_all')
+    imdb, roidb = combined_roidb('fl_train+fl_val_logo+fl27_train+bl_train+toplogo_train')
+    #imdb, roidb = combined_roidb('synmetu_ta_train_all')
     #imdb, roidb = combined_roidb('srf_ice_good+srf_ice_good_occlusion')
     #print '{:d} roidb entries'.format(len(roidb))
 
     #output_dir = get_output_dir(imdb)
-    output_dir = '/home/atuezkoe/github/logoretrieval/py_faster_rcnn/output/faster_rcnn_end2end/synmetu_ta_detection'
+    output_dir = '/home/andras/github/logoretrieval/py_faster_rcnn/output/faster_rcnn_end2end/allnet_sharedconv_ignorelabel'
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 

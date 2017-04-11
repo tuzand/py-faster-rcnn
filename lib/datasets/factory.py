@@ -70,7 +70,7 @@ for split in ['srf_ski_logo_good']:
 fl_path = '/home/andras/data/datasets/FL32/FlickrLogos-v2/fl/fl'
 for split in ['fl_train', 'fl_test', 'fl_test_logo', 'fl_trainval', 'fl_val_logo']:
     name = '{}'.format(split)
-    __sets[name] = (lambda split=split: fl(split, fl_path))
+    __sets[name] = (lambda split=split: logo(split, fl_path))
 
 flbl_path = '/home/andras/data/datasets/FLBL/FLBL'
 for split in ['flbl_train_all', 'flbl_train', 'flbl_test']:
@@ -127,7 +127,7 @@ for split in ['synmetumir_train']:
     name = '{}'.format(split)
     __sets[name] = (lambda split=split: logo_detection(split, synmetumir_path))
 
-synmetuta_path = '/home/atuezkoe/datasets/SYN_METU_TA'
+synmetuta_path = '/home/andras/data/datasets/SYNMETUTA'
 for split in ['synmetu_ta_train_all']:
     name = '{}'.format(split)
     __sets[name] = (lambda split=split: logo_detection(split, synmetuta_path))

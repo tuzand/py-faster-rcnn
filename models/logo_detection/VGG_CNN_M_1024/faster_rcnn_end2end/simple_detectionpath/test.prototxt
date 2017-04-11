@@ -393,10 +393,10 @@ layer {
   }
 }
 layer {
-  name: "cls_score"
+  name: "cls_score_det"
   type: "InnerProduct"
   bottom: "fc7"
-  top: "cls_score"
+  top: "cls_score_det"
   param {
     lr_mult: 1
     decay_mult: 1
@@ -418,10 +418,10 @@ layer {
   }
 }
 layer {
-  name: "bbox_pred"
+  name: "bbox_pred_det"
   type: "InnerProduct"
   bottom: "fc7"
-  top: "bbox_pred"
+  top: "bbox_pred_det"
   param {
     lr_mult: 1
     decay_mult: 1
@@ -443,8 +443,8 @@ layer {
   }
 }
 layer {
-  name: "cls_prob"
+  name: "cls_prob_det"
   type: "Softmax"
-  bottom: "cls_score"
-  top: "cls_prob"
+  bottom: "cls_score_det"
+  top: "cls_prob_det"
 }

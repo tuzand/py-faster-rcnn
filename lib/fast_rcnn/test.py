@@ -102,6 +102,7 @@ def _get_blobs(im, rois):
     """Convert an image and RoIs within that image into network inputs."""
     blobs = {'data' : None, 'rois' : None}
     blobs['data'], im_scale_factors = _get_image_blob(im)
+    cfg.TEST.HAS_RPN = True
     if not cfg.TEST.HAS_RPN:
         blobs['rois'] = _get_rois_blob(rois, im_scale_factors)
     return blobs, im_scale_factors
@@ -169,17 +170,21 @@ def im_detect(net, im, detection=False, boxes=None):
         scores = blobs_out['cls_prob']
         scores_det = None
         if detection:
-            #scores_det = blobs_out['cls_prob_det']
-            scores_det = net.blobs['rpn_roi_scores'].data
+            scores_det = blobs_out['cls_prob_det']
+            #scores_det = net.blobs['rpn_roi_scores'].data
             #det_boxes = net.blobs['rois'].data / im_scales
             box_det_deltas = blobs_out['bbox_pred_det']
             pred_det_boxes = bbox_transform_inv(boxes, box_det_deltas)
             pred_det_boxes = clip_boxes(pred_det_boxes, im.shape)
-        features = net.blobs['cls_prob'].data
-        
+            print box_det_deltas.std()
+        #features = net.blobs['cls_prob'].data[:, 1:]
+        features = net.blobs['fc7'].data
+
     if cfg.TEST.BBOX_REG:
         # Apply bounding-box regression deltas
         box_deltas = blobs_out['bbox_pred']
+        print box_deltas.std()
+        print "\n"
         pred_boxes = bbox_transform_inv(boxes, box_deltas)
         pred_boxes = clip_boxes(pred_boxes, im.shape)
     else:

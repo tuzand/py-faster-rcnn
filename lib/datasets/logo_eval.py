@@ -144,8 +144,6 @@ def logo_eval(detpath,
     # sort by confidence
     sorted_ind = np.argsort(-confidence)
     sorted_scores = np.sort(-confidence)
-    print sorted_ind
-    print BB
     if BB.size:
         BB = BB[sorted_ind, :]
     image_ids = [image_ids[x] for x in sorted_ind]

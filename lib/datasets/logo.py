@@ -51,17 +51,19 @@ class logo(imdb):
                          'texaco', 'unicef', 'vodafone', 'yahoo'
                          )
         
-        #other_datasets = list()
-        #other_datasets = other_datasets.extend(bl).extend(toplogo).extend(fl27)
-        #other_darasets = Set(other_datasets))
+        other_datasets = list()
+        other_datasets.extend(bl)
+        other_datasets.extend(toplogo)
+        other_datasets.extend(fl27)
+        other_datasets = Set(other_datasets)
         self._classes = list()
         self._classes.append('__background__') # always index 0
-        self._classes.extend(bl)
-        #self._classes.extend(flickrlogo32)
-        #otherminusflickr = [brand for brand in other_datasets if brand not in flickrlogo32]
-        #self._classes.extend(otherminusflickr)
+        self._classes.extend(flickrlogo32)
+        otherminusflickr = [brand for brand in other_datasets if brand not in flickrlogo32]
+        self._classes.extend(otherminusflickr)
         self._class_to_ind = dict(zip(self.classes, xrange(self.num_classes)))
         print self._class_to_ind
+        print 'Classes: ' + str(len(self._classes))
         self._image_ext = ['.jpg']
         self._image_index = self._load_image_set_index()
         self._salt = str(uuid.uuid4())
