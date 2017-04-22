@@ -40,7 +40,7 @@ def parse_args():
                         default=None, type=str)
     parser.add_argument('--cfg', dest='cfg_file',
                         help='optional config file',
-                        default='experiments/cfgs/faster_rcnn_end2end.yml', type=str)
+                        default=None, type=str)
     parser.add_argument('--imdb', dest='imdb_name',
                         help='dataset to train on',
                         default='voc_2007_trainval', type=str)
@@ -82,7 +82,6 @@ if __name__ == '__main__':
 
     print('Called with args:')
     print(args)
-
     if args.cfg_file is not None:
         cfg_from_file(args.cfg_file)
     if args.set_cfgs is not None:
@@ -97,6 +96,17 @@ if __name__ == '__main__':
         # fix the random seeds (numpy and caffe) for reproducibility
         np.random.seed(cfg.RNG_SEED)
         caffe.set_random_seed(cfg.RNG_SEED)
+    
+    cfg.TEST.HAS_RPN = True
+    cfg.TRAIN.HAS_RPN = True
+    cfg.TRAIN.IMS_PER_BATCH = 1
+    cfg.TRAIN.BBOX_NORMALIZE_TARGETS_PRECOMPUTED = True
+    cfg.TRAIN.RPN_POSITIVE_OVERLAP = 0.7
+    cfg.TRAIN.RPN_BATCHSIZE = 256
+    cfg.TRAIN.PROPOSAL_METHOD = 'gt'
+    cfg.TRAIN.BG_THRESH_LO = 0.0
+
+
 
     # set up caffe
     caffe.set_mode_gpu()
@@ -108,21 +118,22 @@ if __name__ == '__main__':
     roidb_det = None
     #imdb_det, roidb_det = combined_roidb('srf_ice_good_logo+srf_ice_good_occlusion_logo')
     #imdb_det, roidb_det = combined_roidb('synmetu_ta_train_all')
-    imdb_det, roidb_det = combined_roidb('fl_detection_train+fl_detection_val_logo+fl27_detection_train+bl_detection_train+toplogo_detection_train')
+    imdb_det, roidb_det = combined_roidb('fl_detection_train+fl_detection_val_logo+fl27_detection_train+bl_detection_train+toplogo_detection_train+logos32plus_detection')
         
     #imdb, roidb = combined_roidb(args.imdb_name)
-    imdb, roidb = combined_roidb('fl_train+fl_val_logo+fl27_train+bl_train+toplogo_train')
+    imdb, roidb = combined_roidb('fl_train+fl_val_logo+fl27_train+bl_train+toplogo_train+logos32plus')
     #imdb, roidb = combined_roidb('synmetu_ta_train_all')
     #imdb, roidb = combined_roidb('srf_ice_good+srf_ice_good_occlusion')
     #print '{:d} roidb entries'.format(len(roidb))
 
     #output_dir = get_output_dir(imdb)
-    output_dir = '/home/andras/github/logoretrieval/py_faster_rcnn/output/faster_rcnn_end2end/allnet_sharedconv_ignorelabel'
+    output_dir = '/home/andras/github/logoretrieval/py_faster_rcnn/output/faster_rcnn_end2end/allnet_logos32plus_sharedconv'
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
     print 'Output will be saved to `{:s}`'.format(output_dir)
 
+    print cfg.USE_GPU_NMS
     print args.pretrained_model
     train_net(args.solver, roidb=roidb, roidb_det=roidb_det, output_dir=output_dir,
               pretrained_model=args.pretrained_model,

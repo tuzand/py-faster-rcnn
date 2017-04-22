@@ -68,7 +68,7 @@ __C.TRAIN.BBOX_REG = True
 __C.TRAIN.BBOX_THRESH = 0.5
 
 # Iterations between snapshots
-__C.TRAIN.SNAPSHOT_ITERS = 50000
+__C.TRAIN.SNAPSHOT_ITERS = 10000
 
 # solver.prototxt specifies the snapshot path prefix, this adds an optional
 # infix to yield the path: <prefix>[_<infix>]_iters_XYZ.caffemodel
@@ -228,7 +228,6 @@ def _merge_a_into_b(a, b):
     """
     if type(a) is not edict:
         return
-
     for k, v in a.iteritems():
         # a must specify keys that are in b
         if not b.has_key(k):

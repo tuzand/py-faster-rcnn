@@ -97,6 +97,11 @@ for split in ['bl_train_all', 'bl_train', 'bl_test']:
     name = '{}'.format(split)
     __sets[name] = (lambda split=split: logo(split, bl_path))
 
+logos32plus_path = '/home/andras/data/datasets/L32P/classification'
+for split in ['logos32plus']:
+    name = '{}'.format(split)
+    __sets[name] = (lambda split=split: logo(split, logos32plus_path))
+
 fl_detection_path = '/home/andras/data/datasets/FL32/FlickrLogos-v2/fl/fl_detection'
 for split in ['fl_detection_train', 'fl_detection_test', 'fl_detection_test_logo', 'fl_detection_trainval', 'fl_detection_val_logo']:
     name = '{}'.format(split)
@@ -116,6 +121,11 @@ bl_detection_path = '/home/andras/data/datasets/BL/BL_detection'
 for split in ['bl_detection_train']:
     name = '{}'.format(split)
     __sets[name] = (lambda split=split: logo_detection(split, bl_detection_path))
+
+logos32plus_detection_path = '/home/andras/data/datasets/L32P/detection'
+for split in ['logos32plus_detection']:
+    name = '{}'.format(split)
+    __sets[name] = (lambda split=split: logo_detection(split, logos32plus_detection_path))
 
 metu_path = '/home/andras/data/datasets/METU/metu'
 for split in ['metu_train', 'metu_sample']:

@@ -124,7 +124,7 @@ class logo_detection(imdb):
         # print 'Loading: {}'.format(filename)
 	with open(filename) as f:
             lines = f.readlines()
-
+        
         num_objs = len(lines)
 
         boxes = np.zeros((num_objs, 4), dtype=np.uint16)

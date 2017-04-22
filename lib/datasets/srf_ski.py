@@ -32,6 +32,8 @@ class srf_ski(imdb):
                          'phenix', 'raiffeisen', 'rauch', 'redbull', 'reusch', 'schoeffel',
                          'srf', 'stoeckli', 'swisscom', 'telenor',
                          'uniqua', 'uvex', 'wuerth')
+        #self._classes = ('__background__', # always index 0
+        #                 'audi')
         self._class_to_ind = dict(zip(self.classes, xrange(self.num_classes)))
         print self._class_to_ind
         self._image_ext = ['.png']
