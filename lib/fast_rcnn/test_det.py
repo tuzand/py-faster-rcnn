@@ -102,8 +102,6 @@ def _get_blobs(im, rois):
     """Convert an image and RoIs within that image into network inputs."""
     blobs = {'data' : None, 'rois' : None}
     blobs['data'], im_scale_factors = _get_image_blob(im)
-    cfg.TEST.HAS_RPN = True
-    print cfg.TEST.HAS_RPN
     if not cfg.TEST.HAS_RPN:
         blobs['rois'] = _get_rois_blob(rois, im_scale_factors)
     return blobs, im_scale_factors
@@ -174,7 +172,8 @@ def im_detect(net, im, detection=False, boxes=None):
         
     if cfg.TEST.BBOX_REG:
         # Apply bounding-box regression deltas
-        box_deltas = blobs_out['bbox_pred']
+        #box_deltas = blobs_out['bbox_pred']
+        box_deltas = blobs_out['bbox_pred_det']
         pred_boxes = bbox_transform_inv(boxes, box_deltas)
         pred_boxes = clip_boxes(pred_boxes, im.shape)
     else:

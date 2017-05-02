@@ -102,7 +102,6 @@ def _get_blobs(im, rois):
     """Convert an image and RoIs within that image into network inputs."""
     blobs = {'data' : None, 'rois' : None}
     blobs['data'], im_scale_factors = _get_image_blob(im)
-    cfg.TEST.HAS_RPN = True
     if not cfg.TEST.HAS_RPN:
         blobs['rois'] = _get_rois_blob(rois, im_scale_factors)
     return blobs, im_scale_factors
@@ -176,15 +175,12 @@ def im_detect(net, im, detection=False, boxes=None):
             box_det_deltas = blobs_out['bbox_pred_det']
             pred_det_boxes = bbox_transform_inv(boxes, box_det_deltas)
             pred_det_boxes = clip_boxes(pred_det_boxes, im.shape)
-            print box_det_deltas.std()
-        #features = net.blobs['cls_prob'].data[:, 1:]
-        features = net.blobs['fc7'].data
+        features = net.blobs['cls_score'].data[:, 1:]
+        #features = net.blobs['fc7'].data
 
     if cfg.TEST.BBOX_REG:
         # Apply bounding-box regression deltas
         box_deltas = blobs_out['bbox_pred']
-        print box_deltas.std()
-        print "\n"
         pred_boxes = bbox_transform_inv(boxes, box_deltas)
         pred_boxes = clip_boxes(pred_boxes, im.shape)
     else:
@@ -199,7 +195,7 @@ def im_detect(net, im, detection=False, boxes=None):
         return scores, pred_boxes, features, scores_det, pred_det_boxes
         #return scores, pred_boxes, features, scores_det
     else:
-        return scores, pred_boxes
+        return scores, pred_boxes, features
 
 def vis_detections(im, class_name, dets, thresh=0.3):
     """Visual debugging of detections."""
@@ -294,12 +290,8 @@ def test_net(net, imdb, max_per_image=100, thresh=0.05, vis=False):
                     bbox_index = inds[scores[inds, j].argmax()]
                     logo_scores = scores[bbox_index, :]
             cls_boxes = boxes[inds, j*4:(j+1)*4]
-            #print 'scores'
-            #print cls_scores
             cls_dets = np.hstack((cls_boxes, cls_scores[:, np.newaxis])) \
                 .astype(np.float32, copy=False)
-            #print 'dets'
-            #print cls_dets
             keep = nms(cls_dets, cfg.TEST.NMS)
             cls_dets = cls_dets[keep, :]
             if vis:
