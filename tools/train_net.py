@@ -122,8 +122,8 @@ if __name__ == '__main__':
     #imdb, roidb = combined_roidb('synmetu_ta_train_all')
     #imdb, roidb = combined_roidb('srf_ice_good+srf_ice_good_occlusion')
 
-    #output_dir = '/home/andras/github/logoretrieval/py_faster_rcnn/output/final/allnet_detector_vgg_cnn_m_2'
-    output_dir =  os.path.expanduser('~/github/logoretrieval/py_faster_rcnn/output/final/allnet_detector_resnet50')
+    output_dir = os.path.expanduser('~/github/logoretrieval/py_faster_rcnn/output/final/allnet_detector_vgg_cnn_m')
+    #output_dir =  os.path.expanduser('~/github/logoretrieval/py_faster_rcnn/output/final/allnet_detector_resnet50_bn_scale_merged')
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
