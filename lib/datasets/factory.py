@@ -138,10 +138,16 @@ for split in ['synmetumir_train']:
     name = '{}'.format(split)
     __sets[name] = (lambda split=split: logo_detection(split, synmetumir_path))
 
-synmetuta_path = os.path.expanduser('/data/datasets/SYNMETUTA')
+synmetuta_path = os.path.expanduser('~/data/datasets/SYNMETUTA')
 for split in ['synmetu_ta_train_all']:
     name = '{}'.format(split)
     __sets[name] = (lambda split=split: logo_detection(split, synmetuta_path))
+
+schalke_path = os.path.expanduser('~/data/datasets/schalke')
+for split in ['schalke']:
+    name = '{}'.format(split)
+    __sets[name] = (lambda split=split: logo_detection(split, schalke_path))
+
 
 def get_imdb(name):
     """Get an imdb (image database) by name."""

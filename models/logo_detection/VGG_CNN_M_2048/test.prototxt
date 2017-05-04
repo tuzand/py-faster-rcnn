@@ -1,4 +1,4 @@
-name: "VGG_CNN_M_1024"
+name: "VGG_CNN_M_2048"
 input: "data"
 input_shape {
   dim: 1
@@ -374,7 +374,7 @@ layer {
     decay_mult: 0
   }
   inner_product_param {
-    num_output: 1024
+    num_output: 2048
   }
 }
 layer {
@@ -421,7 +421,7 @@ layer {
   name: "bbox_pred"
   type: "InnerProduct"
   bottom: "fc7"
-  top: "bbox_pred"
+  top: "bbox_pred_det"
   param {
     lr_mult: 1
     decay_mult: 1
@@ -446,5 +446,5 @@ layer {
   name: "cls_prob"
   type: "Softmax"
   bottom: "cls_score"
-  top: "cls_prob"
+  top: "cls_prob_det"
 }
