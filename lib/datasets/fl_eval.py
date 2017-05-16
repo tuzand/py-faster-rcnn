@@ -145,7 +145,8 @@ def fl_eval(detpath,
     # sort by confidence
     sorted_ind = np.argsort(-confidence)
     sorted_scores = np.sort(-confidence)
-    BB = BB[sorted_ind, :]
+    if BB.size:
+        BB = BB[sorted_ind, :]
     image_ids = [image_ids[x] for x in sorted_ind]
 
     # go down dets and mark TPs and FPs
@@ -192,11 +193,20 @@ def fl_eval(detpath,
     fp = np.cumsum(fp)
     tp = np.cumsum(tp)
     rec = tp / float(npos)
-    print "Tp: " + str(tp)
+    if len(tp):
+        print "Tp: " + str(tp[-1])
+        tpret = tp[-1]
+    else:
+        tpret = None
     print "Npos: " + str(npos)
+    if len(fp):
+        print "Fp: " + str(fp[-1])
+        fpret = fp[-1]
+    else:
+        fpret = None
     # avoid divide by zero in case the first detection matches a difficult
     # ground truth
     prec = tp / np.maximum(tp + fp, np.finfo(np.float64).eps)
     ap = fl_ap(rec, prec, use_07_metric)
 
-    return rec, prec, ap
+    return rec, prec, ap, tpret, fpret

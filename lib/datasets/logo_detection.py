@@ -182,13 +182,14 @@ class logo_detection(imdb):
 
     def evaluate_detections(self, all_boxes, output_dir):
         self._write_logo_detection_results_file(all_boxes)
-        self._do_python_eval(output_dir)
+        rec, prec, map, tp, fp = self._do_python_eval(output_dir)
         if self.config['cleanup']:
             for cls in self._classes:
                 if cls == '__background__':
                     continue
                 filename = self._get_logo_detection_results_file_template().format(cls)
                 os.remove(filename)
+        return rec, prec, map, tp, fp
 
     def _get_comp_id(self):
         comp_id = (self._comp_id + '_' + self._salt if self.config['use_salt']
@@ -224,12 +225,18 @@ class logo_detection(imdb):
         aps = []
         if not os.path.isdir(output_dir):
             os.mkdir(output_dir)
+        tp = 0
+        fp = 0
         for i, cls in enumerate(self._classes):
             if cls == '__background__':
                 continue
             filename = self._get_logo_detection_results_file_template().format(cls)
-            rec, prec, ap = logo_detection_eval(
+            rec, prec, ap, tpclass, fpclass = logo_detection_eval(
                 filename, annopath, imagesetfile, cls, cachedir, ovthresh=0.5)
+            if tpclass:
+                tp += tpclass
+            if fpclass:
+                fp += fpclass
             aps += [ap]
             print('AP for {} = {:.4f}'.format(cls, ap))
             with open(os.path.join(output_dir, cls + '_pr.pkl'), 'w') as f:
@@ -248,4 +255,5 @@ class logo_detection(imdb):
         print('Recompute with `./tools/reval.py --matlab ...` for your paper.')
         print('-- Thanks, The Management')
         print('--------------------------------------------------------------')
+        return rec, prec, np.mean(aps), tp, fp
 

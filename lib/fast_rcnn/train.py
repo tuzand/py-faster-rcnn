@@ -67,6 +67,7 @@ class SolverWrapper(object):
         if scale_bbox_params:
             # save original values
             orig_0 = net.params['bbox_pred'][0].data.copy()
+            print orig_0.shape
             orig_1 = net.params['bbox_pred'][1].data.copy()
 
             # scale and shift with bbox reg unnormalization; then save snapshot
@@ -150,8 +151,8 @@ def filter_roidb(roidb):
                                                        num, num_after)
     return filtered_roidb
 
-def train_net(solver_prototxt, roidb, roidb_det, output_dir,
-              pretrained_model=None, max_iters=40000):
+def train_net(solver_prototxt, roidb, output_dir,
+              pretrained_model=None, max_iters=40000, roidb_det=None):
     """Train a Fast R-CNN network."""
 
     roidb = filter_roidb(roidb)

@@ -106,7 +106,7 @@ def _get_blobs(im, rois):
         blobs['rois'] = _get_rois_blob(rois, im_scale_factors)
     return blobs, im_scale_factors
 
-def im_detect(net, im, detection=False, boxes=None):
+def im_detect(net, im, boxes=None, detection=False, customfeatures = False):
     """Detect object classes in an image given object proposals.
 
     Arguments:
@@ -191,11 +191,14 @@ def im_detect(net, im, detection=False, boxes=None):
         # Map scores and predictions back to the original set of boxes
         scores = scores[inv_index, :]
         pred_boxes = pred_boxes[inv_index, :]
+        features = features[inv_index, :]
     if detection:
         return scores, pred_boxes, features, scores_det, pred_det_boxes
         #return scores, pred_boxes, features, scores_det
-    else:
+    elif customfeatures:
         return scores, pred_boxes, features
+    else:
+        return scores, pred_boxes
 
 def vis_detections(im, class_name, dets, thresh=0.3):
     """Visual debugging of detections."""

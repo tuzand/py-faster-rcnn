@@ -69,6 +69,14 @@ if __name__ == '__main__':
         cfg_from_list(args.set_cfgs)
 
     cfg.GPU_ID = args.gpu_id
+    cfg.TEST.HAS_RPN = True
+    cfg.TRAIN.HAS_RPN = True
+    cfg.TRAIN.IMS_PER_BATCH = 1
+    cfg.TRAIN.BBOX_NORMALIZE_TARGETS_PRECOMPUTED = True
+    cfg.TRAIN.RPN_POSITIVE_OVERLAP = 0.7
+    cfg.TRAIN.RPN_BATCHSIZE = 256
+    cfg.TRAIN.PROPOSAL_METHOD = 'gt'
+    cfg.TRAIN.BG_THRESH_LO = 0.0
 
     print('Using config:')
     pprint.pprint(cfg)

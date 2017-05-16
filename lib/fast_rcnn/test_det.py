@@ -106,7 +106,7 @@ def _get_blobs(im, rois):
         blobs['rois'] = _get_rois_blob(rois, im_scale_factors)
     return blobs, im_scale_factors
 
-def im_detect(net, im, detection=False, boxes=None):
+def im_detect(net, im, rpndet=False, boxes=None):
     """Detect object classes in an image given object proposals.
 
     Arguments:
@@ -166,16 +166,21 @@ def im_detect(net, im, detection=False, boxes=None):
         scores = net.blobs['cls_score'].data
     else:
         # use softmax estimated probabilities
-        scores = blobs_out['cls_prob_det']
-        #scores_det = net.blobs['rpn_roi_scores'].data
-        #det_boxes = net.blobs['rois'].data / im_scales
+        if rpndet:
+            scores = net.blobs['rpn_scores'].data
+            pred_boxes = net.blobs['rois'].data / im_scales
+        else:
+            scores = blobs_out['cls_prob_det']
         
     if cfg.TEST.BBOX_REG:
-        # Apply bounding-box regression deltas
-        #box_deltas = blobs_out['bbox_pred']
-        box_deltas = blobs_out['bbox_pred_det']
-        pred_boxes = bbox_transform_inv(boxes, box_deltas)
-        pred_boxes = clip_boxes(pred_boxes, im.shape)
+        if rpndet:
+            skip
+        else:
+            # Apply bounding-box regression deltas
+            #box_deltas = blobs_out['bbox_pred']
+            box_deltas = blobs_out['bbox_pred_det']
+            pred_boxes = bbox_transform_inv(boxes, box_deltas)
+            pred_boxes = clip_boxes(pred_boxes, im.shape)
     else:
         # Simply repeat the boxes, once for each class
         pred_boxes = np.tile(boxes, (1, scores.shape[1]))
