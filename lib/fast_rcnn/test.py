@@ -106,7 +106,7 @@ def _get_blobs(im, rois):
         blobs['rois'] = _get_rois_blob(rois, im_scale_factors)
     return blobs, im_scale_factors
 
-def im_detect(net, im, boxes=None, detection=False, customfeatures = False):
+def im_detect(net, im, boxes=None, customfeatures = False, detection=False, rpndet=False):
     """Detect object classes in an image given object proposals.
 
     Arguments:
@@ -168,21 +168,35 @@ def im_detect(net, im, boxes=None, detection=False, customfeatures = False):
         # use softmax estimated probabilities
         scores = blobs_out['cls_prob']
         scores_det = None
-        if detection:
+        '''if detection and not rpndet:
             scores_det = blobs_out['cls_prob_det']
             #scores_det = net.blobs['rpn_roi_scores'].data
             #det_boxes = net.blobs['rois'].data / im_scales
             box_det_deltas = blobs_out['bbox_pred_det']
             pred_det_boxes = bbox_transform_inv(boxes, box_det_deltas)
-            pred_det_boxes = clip_boxes(pred_det_boxes, im.shape)
-        features = net.blobs['cls_score'].data[:, 1:]
+            pred_det_boxes = clip_boxes(pred_det_boxes, im.shape)'''
+        features = net.blobs['fc7'].data #[:, 1:]
         #features = net.blobs['fc7'].data
+        if rpndet:
+            scores_det = net.blobs['rpn_scores'].data
+            pred_det_boxes = net.blobs['rois'].data / im_scales
+        elif detection:
+            scores_det = blobs_out['cls_prob_det']
 
     if cfg.TEST.BBOX_REG:
         # Apply bounding-box regression deltas
         box_deltas = blobs_out['bbox_pred']
         pred_boxes = bbox_transform_inv(boxes, box_deltas)
         pred_boxes = clip_boxes(pred_boxes, im.shape)
+        if rpndet:
+            pass
+        elif detection:
+            pred_det_boxes = np.zeros((len(scores), 4))
+            for idx in scores:
+                s = scores[idx, 1:]
+                max_score_idx = s.argmax()
+                pred_det_boxes[idx] = pred_boxes[idx, 4*max_score_idx : 4*(max_score_idx + 1)]
+                
     else:
         # Simply repeat the boxes, once for each class
         pred_boxes = np.tile(boxes, (1, scores.shape[1]))
@@ -192,6 +206,8 @@ def im_detect(net, im, boxes=None, detection=False, customfeatures = False):
         scores = scores[inv_index, :]
         pred_boxes = pred_boxes[inv_index, :]
         features = features[inv_index, :]
+        if rpndet or detection:
+            pred_det_boxes = pred_det_boxes[inv_indes, :]
     if detection:
         return scores, pred_boxes, features, scores_det, pred_det_boxes
         #return scores, pred_boxes, features, scores_det
@@ -282,6 +298,7 @@ def test_net(net, imdb, max_per_image=100, thresh=0.05, vis=False):
         max_score = 0
         cls = []
         logo_scores = None
+        bbox = None
         for j in xrange(1, imdb.num_classes):
             inds = np.where(scores[:, j] > thresh)[0]
             cls_scores = scores[inds, j]
@@ -292,6 +309,7 @@ def test_net(net, imdb, max_per_image=100, thresh=0.05, vis=False):
                     cls = j
                     bbox_index = inds[scores[inds, j].argmax()]
                     logo_scores = scores[bbox_index, :]
+                    bbox = boxes[bbox_index, j*4:(j+1)*4]
             cls_boxes = boxes[inds, j*4:(j+1)*4]
             cls_dets = np.hstack((cls_boxes, cls_scores[:, np.newaxis])) \
                 .astype(np.float32, copy=False)

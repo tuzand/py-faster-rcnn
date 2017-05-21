@@ -135,8 +135,6 @@ class schalke(imdb):
 	import re
 	objs = re.findall('\d+ \d+ \d+ \d+', data)
         brand = data.split()[-1]
-        print objs
-        print brand
         num_objs = len(objs)
 
         boxes = np.zeros((num_objs, 4), dtype=np.uint16)
@@ -193,14 +191,14 @@ class schalke(imdb):
 
     def evaluate_detections(self, all_boxes, output_dir):
         self._write_schalke_results_file(all_boxes)
-        rec, prec, map, tp, fp = self._do_python_eval(output_dir)
+        rec, prec, map, tp, fp, npos = self._do_python_eval(output_dir)
         if self.config['cleanup']:
             for cls in self._classes:
                 if cls == '__background__':
                     continue
                 filename = self._get_schalke_results_file_template().format(cls)
                 os.remove(filename)
-        return rec, prec, map, tp, fp
+        return rec, prec, map, tp, fp, npos
 
     def _get_comp_id(self):
         comp_id = (self._comp_id + '_' + self._salt if self.config['use_salt']
@@ -238,16 +236,19 @@ class schalke(imdb):
             os.mkdir(output_dir)
         tp = 0
         fp = 0
+        npos = 0
         for i, cls in enumerate(self._classes):
             if cls == '__background__':
                 continue
             filename = self._get_schalke_results_file_template().format(cls)
-            rec, prec, ap, tpclass, fpclass = fl_eval(
+            rec, prec, ap, tpclass, fpclass, nposclass = fl_eval(
                 filename, annopath, imagesetfile, cls, cachedir, ovthresh=0.5)
             if tpclass:
                 tp += tpclass
             if fpclass:
                 fp += fpclass
+            if nposclass:
+                npos += nposclass
             aps += [ap]
             print('AP for {} = {:.4f}'.format(cls, ap))
             with open(os.path.join(output_dir, cls + '_pr.pkl'), 'w') as f:
@@ -266,5 +267,5 @@ class schalke(imdb):
         print('Recompute with `./tools/reval.py --matlab ...` for your paper.')
         print('-- Thanks, The Management')
         print('--------------------------------------------------------------')
-        return rec, prec, np.mean(aps), tp, fp
+        return rec, prec, np.mean(aps), tp, fp, npos
 

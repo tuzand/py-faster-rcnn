@@ -12,8 +12,10 @@ import numpy as np
 def parse_rec(filename):
     """ Parse an FL annotation file """
     objects = []
-    with open(filename) as f:
-        lines = f.readlines()
+    lines = []
+    if os.path.isfile(filename):
+        with open(filename) as f:
+            lines = f.readlines()
     #objs = re.findall('\d+ \d+ \d+ \d+', data)
     #brand = data.split()[-1]
 
@@ -209,4 +211,4 @@ def fl_eval(detpath,
     prec = tp / np.maximum(tp + fp, np.finfo(np.float64).eps)
     ap = fl_ap(rec, prec, use_07_metric)
 
-    return rec, prec, ap, tpret, fpret
+    return rec, prec, ap, tpret, fpret, npos

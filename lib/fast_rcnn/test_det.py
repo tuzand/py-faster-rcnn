@@ -174,7 +174,7 @@ def im_detect(net, im, rpndet=False, boxes=None):
         
     if cfg.TEST.BBOX_REG:
         if rpndet:
-            skip
+            pass
         else:
             # Apply bounding-box regression deltas
             #box_deltas = blobs_out['bbox_pred']

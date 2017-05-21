@@ -133,8 +133,6 @@ class fl(imdb):
 	import re
 	objs = re.findall('\d+ \d+ \d+ \d+', data)
         brand = data.split()[-1]
-        print objs
-        print brand
         num_objs = len(objs)
 
         boxes = np.zeros((num_objs, 4), dtype=np.uint16)
