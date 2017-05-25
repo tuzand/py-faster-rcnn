@@ -27,7 +27,7 @@ class schalke(imdb):
         self._data_path = os.path.join(self._devkit_path, 'data')
         self._classes = list()
         self._classes.append('__background__') # always index 0
-        with open('/home/andras/data/misc/schalke_brands.txt', 'r') as f:
+        with open('/home/andras/data/datasets/schalke/data/brands.txt', 'r') as f:
             brandlist = f.read().splitlines()
         for b in brandlist:
             if b == "":
@@ -188,6 +188,7 @@ class schalke(imdb):
                                 format(index, dets[k, -1],
                                        dets[k, 0] + 1, dets[k, 1] + 1,
                                        dets[k, 2] + 1, dets[k, 3] + 1))
+        print filename
 
     def evaluate_detections(self, all_boxes, output_dir):
         self._write_schalke_results_file(all_boxes)

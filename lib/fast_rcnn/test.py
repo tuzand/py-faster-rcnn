@@ -175,7 +175,7 @@ def im_detect(net, im, boxes=None, customfeatures = False, detection=False, rpnd
             box_det_deltas = blobs_out['bbox_pred_det']
             pred_det_boxes = bbox_transform_inv(boxes, box_det_deltas)
             pred_det_boxes = clip_boxes(pred_det_boxes, im.shape)'''
-        features = net.blobs['fc7'].data #[:, 1:]
+        features = net.blobs['cls_score'].data[:, 1:]
         #features = net.blobs['fc7'].data
         if rpndet:
             scores_det = net.blobs['rpn_scores'].data
