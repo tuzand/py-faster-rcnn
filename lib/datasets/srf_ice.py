@@ -33,7 +33,7 @@ class srf_ice(imdb):
                          'belarusbank', 'swisslos')
         self._class_to_ind = dict(zip(self.classes, xrange(self.num_classes)))
         print self._class_to_ind
-        self._image_ext = ['.png']
+        self._image_ext = ['.jpg']
         self._image_index = self._load_image_set_index()
         self._salt = str(uuid.uuid4())
         self._comp_id = 'comp4'
@@ -124,17 +124,12 @@ class srf_ice(imdb):
         """
         Load image and bounding boxes info from txt files of SRF ICE.
         """
-        filename = os.path.join(self._data_path, 'Annotations', index + '.png.bboxes.txt')
+        filename = os.path.join(self._data_path, 'Annotations', index + '.jpg.bboxes.txt')
         # print 'Loading: {}'.format(filename)
 	with open(filename) as f:
-            data = f.read()
+            data = f.read().splitlines()
 
-	import re
-	objs = re.findall('\d+ \d+ \d+ \d+', data)
-        brand = data.split()[-1]
-        print objs
-        print brand
-        num_objs = len(objs)
+        num_objs = len(data)
 
         boxes = np.zeros((num_objs, 4), dtype=np.uint16)
         gt_classes = np.zeros((num_objs), dtype=np.int32)
@@ -144,13 +139,14 @@ class srf_ice(imdb):
         seg_areas = np.zeros((num_objs), dtype=np.float32)
 
         # Load object bounding boxes into a data frame.
-        for ix, obj in enumerate(objs):
+        for ix, obj in enumerate(data):
             # Make pixel indexes 0-based
-	    coor = re.findall('\d+', obj)
-            x1 = float(coor[0])
-            y1 = float(coor[1])
-            x2 = float(coor[2])
-            y2 = float(coor[3])
+            obj = obj.split()
+            x1 = float(obj[0])
+            y1 = float(obj[1])
+            x2 = float(obj[2])
+            y2 = float(obj[3])
+            brand = obj[4]
             cls = self._class_to_ind[brand]
             boxes[ix, :] = [x1, y1, x2, y2]
             gt_classes[ix] = cls
@@ -223,7 +219,7 @@ class srf_ice(imdb):
         annopath = os.path.join(
             self._data_path,
             'Annotations',
-            '{:s}.png.bboxes.txt')
+            '{:s}.jpg.bboxes.txt')
         imagesetfile = os.path.join(
             self._data_path,
             'ImageSets',

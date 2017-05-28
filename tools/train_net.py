@@ -120,13 +120,13 @@ if __name__ == '__main__':
     #imdb_det, roidb_det = combined_roidb('srf_ice_good_logo+srf_ice_good_occlusion_logo')
     #imdb, roidb = combined_roidb('synmetu_ta_train_all')
     #imdb, roidb = combined_roidb('flbl_detection_train_all+bl_detection_train')
-    imdb, roidb = combined_roidb('fl_detection_train+fl_detection_val_logo+fl_detection_test_logo+fl27_detection_train+bl_detection_train+toplogo_detection_train+logos32plus_detection')
+    #imdb, roidb = combined_roidb('fl_detection_train+fl_detection_val_logo+fl_detection_test_logo+fl27_detection_train+bl_detection_train+toplogo_detection_train+logos32plus_detection')
     #imdb_det, roidb_det = combined_roidb('fl27_detection_train+bl_detection_train+toplogo_detection_train+logos32plus_detection+flbl_detection_train_all')
     #imdb, roidb = combined_roidb('srf_football_logo+srf_ice_good_logo+srf_ice_good_occlusion_logo+srf_ice_bad_logo+srf_ice_bad_occlusion_logo+srf_ski_good_logo')
 
    
     #imdb, roidb = combined_roidb(args.imdb_name)
-    #imdb, roidb = combined_roidb('srf_ice_good+srf_ice_good_occlusion+srf_ice_bad+srf_ice_bad_occlusion+srf_ski+srf_football+fl_train+fl_val_logo+fl_test_logo+fl27_train+bl_train+bl_test+toplogo_train+logos32plus')
+    imdb, roidb = combined_roidb('srf_ice_good+srf_ice_good_occlusion+srf_ice_bad+srf_ice_bad_occlusion+srf_ski+srf_football+fl_train+fl_val_logo+fl_test_logo+fl27_train+bl_train+bl_test+toplogo_train+logos32plus')
     #imdb, roidb = combined_roidb('fl_train+fl_val_logo')
     #imdb, roidb = combined_roidb('fl_train+fl_val_logo+fl27_train+bl_train+toplogo_train+logos32plus')
     #imdb, roidb = combined_roidb('synmetu_ta_train_all')
@@ -135,7 +135,7 @@ if __name__ == '__main__':
     #imdb, roidb = combined_roidb('fl_train+fl_val_logo')
 
 
-    output_dir = os.path.expanduser('~/github/logoretrieval/py_faster_rcnn/output/final/allnet_det_vgg16_wo_conv5')
+    output_dir = os.path.expanduser('~/github/logoretrieval/py_faster_rcnn/output/final/alllogo_simple_vgg16')
     #output_dir =  os.path.expanduser('~/github/logoretrieval/py_faster_rcnn/output/final/allnet_detector_resnet50_bn_scale_merged')
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)

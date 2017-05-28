@@ -174,12 +174,9 @@ class alllogo(imdb):
         filename = os.path.join(self._data_path, 'Annotations', index + '.jpg.bboxes.txt')
         # print 'Loading: {}'.format(filename)
 	with open(filename) as f:
-            data = f.read()
+            data = f.read().splitlines()
 
-	import re
-	objs = re.findall('\d+ \d+ \d+ \d+', data)
-        brand = data.split()[-1]
-        num_objs = len(objs)
+        num_objs = len(data)
 
         boxes = np.zeros((num_objs, 4), dtype=np.uint16)
         gt_classes = np.zeros((num_objs), dtype=np.int32)
@@ -189,13 +186,14 @@ class alllogo(imdb):
         seg_areas = np.zeros((num_objs), dtype=np.float32)
 
         # Load object bounding boxes into a data frame.
-        for ix, obj in enumerate(objs):
+        for ix, obj in enumerate(data):
             # Make pixel indexes 0-based
-	    coor = re.findall('\d+', obj)
-            x1 = float(coor[0])
-            y1 = float(coor[1])
-            x2 = float(coor[2])
-            y2 = float(coor[3])
+            obj = obj.split()
+            x1 = float(obj[0])
+            y1 = float(obj[1])
+            x2 = float(obj[2])
+            y2 = float(obj[3])
+            brand = obj[4]
             cls = self._class_to_ind[brand]
             boxes[ix, :] = [x1, y1, x2, y2]
             gt_classes[ix] = cls

@@ -16,8 +16,6 @@ def parse_rec(filename):
     if os.path.isfile(filename):
         with open(filename) as f:
             lines = f.readlines()
-    #objs = re.findall('\d+ \d+ \d+ \d+', data)
-    #brand = data.split()[-1]
 
     for ix, line in enumerate(lines):
         l = line.split()

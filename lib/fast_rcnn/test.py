@@ -179,7 +179,7 @@ def im_detect(net, im, boxes=None, customfeatures = False, detection=False, rpnd
         #features = net.blobs['fc7'].data
         if rpndet:
             scores_det = net.blobs['rpn_scores'].data
-            pred_det_boxes = net.blobs['rois'].data / im_scales
+            pred_det_boxes = net.blobs['rois'].data.copy() / im_scales[0]
         elif detection:
             scores_det = blobs_out['cls_prob_det']
 

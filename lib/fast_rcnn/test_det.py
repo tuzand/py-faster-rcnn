@@ -168,7 +168,7 @@ def im_detect(net, im, rpndet=False, boxes=None):
         # use softmax estimated probabilities
         if rpndet:
             scores = net.blobs['rpn_scores'].data
-            pred_boxes = net.blobs['rois'].data / im_scales
+            pred_boxes = net.blobs['rois'].data.copy() / im_scales[0]
         else:
             scores = blobs_out['cls_prob_det']
         
