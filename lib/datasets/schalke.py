@@ -221,7 +221,7 @@ class schalke(imdb):
             filename)
         return path
 
-    def _do_python_eval(self, output_dir = 'output'):
+    def _do_python_eval(self, output_dir = 'output', custom = False):
         annopath = os.path.join(
             self._data_path,
             'Annotations',
@@ -240,9 +240,12 @@ class schalke(imdb):
         for i, cls in enumerate(self._classes):
             if cls == '__background__':
                 continue
-            filename = self._get_schalke_results_file_template().format(cls)
+            if not custom:
+                filename = self._get_schalke_results_file_template().format(cls)
+            else:
+                filename = '/home/andras/daniel/' + cls + '.txt'
             rec, prec, ap, tpclass, fpclass, nposclass = fl_eval(
-                filename, annopath, imagesetfile, cls, cachedir, ovthresh=0.5)
+                filename, annopath, imagesetfile, cls, cachedir, ovthresh=0.5, custom=custom)
             if tpclass:
                 tp += tpclass
             if fpclass:

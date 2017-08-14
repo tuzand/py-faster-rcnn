@@ -50,9 +50,11 @@ class SolverWrapper(object):
         with open(solver_prototxt, 'rt') as f:
             pb2.text_format.Merge(f.read(), self.solver_param)
 
+        print self.solver.net.layers
         self.solver.net.layers[0].set_roidb(roidb)
         if roidb_det != None:
-            self.solver.net.layers[47].set_roidb(roidb_det)
+            # VGG_CNN_M: 47
+            self.solver.net.layers[61].set_roidb(roidb_det)
 
     def snapshot(self):
         """Take a snapshot of the network after unnormalizing the learned

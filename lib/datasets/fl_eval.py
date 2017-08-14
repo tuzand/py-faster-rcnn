@@ -68,7 +68,8 @@ def fl_eval(detpath,
              classname,
              cachedir,
              ovthresh=0.5,
-             use_07_metric=False):
+             use_07_metric=False,
+             custom = False):
     """rec, prec, ap = fl_eval(detpath,
                                 annopath,
                                 imagesetfile,
@@ -133,7 +134,16 @@ def fl_eval(detpath,
                                  'det': det}
 
     # read dets
-    detfile = detpath.format(classname)
+    if custom:
+        detfile = '/home/andras/daniel/' + classname + '.txt'
+        print detfile
+        if not os.path.isfile(detfile):
+            print detfile
+            with open(detfile, 'a') as f:
+                f.write('')
+            #open(detfile, 'a').close()
+    else:
+        detfile = detpath.format(classname)
     with open(detfile, 'r') as f:
         lines = f.readlines()
 
