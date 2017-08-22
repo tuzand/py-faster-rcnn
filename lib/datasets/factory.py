@@ -22,6 +22,14 @@ from datasets.alllogo import alllogo
 import numpy as np
 import os
 
+
+
+ownlogos_det_path = os.path.expanduser('~/data/datasets/logodata_det')
+for split in ['ownlogos_det']:
+    name = '{}'.format(split)
+    __sets[name] = (lambda split=split: logo_detection(split, ownlogos_det_path))
+
+
 # Set up voc_<year>_<split> using selective search "fast" mode
 srf_ice_good_path = os.path.expanduser('~/data/datasets/srf_ice/good')
 for split in ['srf_ice_good']:
