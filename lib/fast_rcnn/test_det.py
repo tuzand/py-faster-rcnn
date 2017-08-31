@@ -141,6 +141,7 @@ def im_detect(net, im, rpndet=False, boxes=None):
     
     # reshape network inputs
     net.blobs['data'].reshape(*(blobs['data'].shape))
+    print blobs['data'].shape
     if cfg.TEST.HAS_RPN:
         net.blobs['im_info'].reshape(*(blobs['im_info'].shape))
     else:
@@ -152,11 +153,13 @@ def im_detect(net, im, rpndet=False, boxes=None):
         forward_kwargs['im_info'] = blobs['im_info'].astype(np.float32, copy=False)
     else:
         forward_kwargs['rois'] = blobs['rois'].astype(np.float32, copy=False)
+
     blobs_out = net.forward(**forward_kwargs)
 
     if cfg.TEST.HAS_RPN:
         assert len(im_scales) == 1, "Only single-image batch implemented"
         rois = net.blobs['rois'].data.copy()
+        print rois.shape
         # unscale back to raw image space
         boxes = rois[:, 1:5] / im_scales[0]
 

@@ -27,7 +27,7 @@ class schalke(imdb):
         self._data_path = os.path.join(self._devkit_path, 'data')
         self._classes = list()
         self._classes.append('__background__') # always index 0
-        with open('/home/andras/data/datasets/schalke/data/brands.txt', 'r') as f:
+        with open('/home/atuezkoe/data/datasets/schalke/data/brands.txt', 'r') as f:
             brandlist = f.read().splitlines()
         for b in brandlist:
             if b == "":

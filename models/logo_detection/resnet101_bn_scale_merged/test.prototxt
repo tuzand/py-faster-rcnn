@@ -4465,7 +4465,7 @@ layer {
 layer {
     bottom: "res5a_branch1"
     bottom: "res5a_branch2c"
-    top: "res5a"
+    top: "res5a"21
     name: "res5a"
     type: "Eltwise"
 }
@@ -4759,7 +4759,7 @@ layer {
 }
 
 layer {
-  name: "cls_score_det"
+  name: "cls_score"
   type: "InnerProduct"
   bottom: "pool5"
   top: "cls_score"
@@ -4782,10 +4782,10 @@ layer {
   }
 }
 layer {
-  name: "bbox_pred_det"
+  name: "bbox_pred"
   type: "InnerProduct"
   bottom: "pool5"
-  top: "bbox_pred_det"
+  top: "bbox_pred"
   param {
     lr_mult: 1
   }
@@ -4809,6 +4809,6 @@ layer {
   name: "cls_prob"
   type: "Softmax"
   bottom: "cls_score"
-  top: "cls_prob_det"
+  top: "cls_prob"
 }
 

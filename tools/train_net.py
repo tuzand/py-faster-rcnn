@@ -137,7 +137,7 @@ if __name__ == '__main__':
     #imdb, roidb = combined_roidb('fl_train+fl_val_logo')
 
 
-    output_dir = os.path.expanduser('~/github/logoretrieval/py_faster_rcnn/output/final/publicNonFlickr_ownlogo_detection_vgg16_2')
+    output_dir = os.path.expanduser('~/github/logoretrieval/py_faster_rcnn/output/final/publicNonFlickr_ownlogo_detection_vgg16')
     #output_dir =  os.path.expanduser('~/github/logoretrieval/py_faster_rcnn/output/final/allnet_detector_resnet50_bn_scale_merged')
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)

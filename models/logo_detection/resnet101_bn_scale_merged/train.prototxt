@@ -4836,7 +4836,7 @@ layer {
 }
 
 layer {
-  name: "cls_score_det"
+  name: "cls_score"
   type: "InnerProduct"
   bottom: "pool5"
   top: "cls_score"
@@ -4859,7 +4859,7 @@ layer {
   }
 }
 layer {
-  name: "bbox_pred_det"
+  name: "bbox_pred"
   type: "InnerProduct"
   bottom: "pool5"
   top: "bbox_pred"
