@@ -113,8 +113,8 @@ if __name__ == '__main__':
 
 
     # set up caffe
-    caffe.set_mode_gpu()
-    caffe.set_device(args.gpu_id)
+    caffe.set_mode_cpu()
+    #caffe.set_device(args.gpu_id)
 
     roidb_det = None
     #imdb_det, roidb_det = combined_roidb('srf_ice_good_logo+srf_ice_good_occlusion_logo')
@@ -130,15 +130,14 @@ if __name__ == '__main__':
     #imdb, roidb = combined_roidb('srf_ice_good+srf_ice_good_occlusion+srf_ice_bad+srf_ice_bad_occlusion+srf_ski+srf_football+fl_train+fl_val_logo+fl27_train+bl_train+bl_test+toplogo_train+logos32plus')
 
     #imdb, roidb = combined_roidb('fl_train+fl_val_logo')
-    #imdb, roidb = combined_roidb('fl_train+fl_val_logo+fl27_train+bl_train+toplogo_train+logos32plus')
+    #imdb, roidb = combined_roidb('fl27_train+bl_train+toplogo_train')
     #imdb, roidb = combined_roidb('synmetu_ta_train_all')
     #imdb, roidb = combined_roidb('srf_ice_good+srf_ice_good_occlusion')
     #imdb, roidb = combined_roidb('flbl_detection_train_all')
     #imdb, roidb = combined_roidb('fl_train+fl_val_logo')
 
 
-    output_dir = os.path.expanduser('~/github/logoretrieval/py_faster_rcnn/output/final/publicNonFlickr_ownlogo_detection_vgg16_2')
-    #output_dir =  os.path.expanduser('~/github/logoretrieval/py_faster_rcnn/output/final/allnet_detector_resnet50_bn_scale_merged')
+    output_dir = os.path.expanduser('~/github/logoretrieval/py_faster_rcnn/output/final/publicNonFlickr_ownlogo_detection_resnet')
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 

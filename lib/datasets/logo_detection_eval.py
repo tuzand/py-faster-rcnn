@@ -12,8 +12,10 @@ import numpy as np
 def parse_rec(filename):
     """ Parse an Logo detection annotation file """
     objects = []
-    with open(filename) as f:
-        lines = f.readlines()
+    lines = []
+    if os.path.isfile(filename):
+        with open(filename) as f:
+            lines = f.readlines()
 
     for ix, line in enumerate(lines):
         obj_struct = {}

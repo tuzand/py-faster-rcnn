@@ -18,20 +18,36 @@ import cPickle
 import subprocess
 import uuid
 from fl_eval import fl_eval
+from sets import Set
 
-class fl(imdb):
+
+class publiclogo(imdb):
     def __init__(self, image_set, devkit_path):
         imdb.__init__(self, image_set)
         self._image_set = image_set
         self._devkit_path = devkit_path
         self._data_path = os.path.join(self._devkit_path, 'data')
-        self._classes = ('__background__', # always index 0
-                         'adidas', 'apple', 'bmw', 'chimay', 'corona', 'erdinger',
-                         'fedex', 'ford', 'google', 'heineken', 'milka', 'paulaner',
-                         'rittersport', 'singha', 'stellaartois', 'tsingtao', 'aldi',
-                         'becks', 'carlsberg', 'cocacola', 'dhl', 'esso', 'ferrari',
-                         'fosters', 'guiness', 'hp', 'nvidia', 'pepsi', 'shell',
-                         'starbucks', 'texaco', 'ups')
+
+        logolist = list()
+        sets = ['BL/BL', 'FL27/FL27', 'toplogo/toplogo']
+        for s in sets:
+            with open('/home/andras/data/datasets/' + s + '/data/brands.txt', 'r') as f:
+                brandlist = f.read().splitlines()
+        
+            for b in brandlist:
+                if b == "":
+                    continue
+                logolist.append(b)
+
+        other_datasets = list()
+        other_datasets.extend(logolist)
+        other_datasets = Set(other_datasets)
+        self._classes = list()
+        self._classes.append('__background__') # always index 0
+        self._classes.extend(other_datasets)
+
+        print 'Number of classes: ' + str(len(self._classes))
+        print self._classes
         self._class_to_ind = dict(zip(self.classes, xrange(self.num_classes)))
         print self._class_to_ind
         self._image_ext = ['.jpg']
@@ -97,7 +113,7 @@ class fl(imdb):
             print '{} gt roidb loaded from {}'.format(self.name, cache_file)
             return roidb
 
-        gt_roidb = [self._load_fl_annotation(index)
+        gt_roidb = [self._load_publiclogo_annotation(index)
                     for index in self.image_index]
         with open(cache_file, 'wb') as fid:
             cPickle.dump(gt_roidb, fid, cPickle.HIGHEST_PROTOCOL)
@@ -121,9 +137,9 @@ class fl(imdb):
             box_list = cPickle.load(f)
         return self.create_roidb_from_box_list(box_list, gt_roidb)
 
-    def _load_fl_annotation(self, index):
+    def _load_publiclogo_annotation(self, index):
         """
-        Load image and bounding boxes info from txt files of FlickrLogos-32.
+        Load image and bounding boxes info from txt files of Publilogo.
         """
         filename = os.path.join(self._data_path, 'Annotations', index + '.jpg.bboxes.txt')
         # print 'Loading: {}'.format(filename)
@@ -162,12 +178,12 @@ class fl(imdb):
                 'flipped' : False,
                 'seg_areas' : seg_areas}
 
-    def _write_fl_results_file(self, all_boxes):
+    def _write_publiclogo_results_file(self, all_boxes):
         for cls_ind, cls in enumerate(self.classes):
             if cls == '__background__':
                 continue
             print 'Writing {} results file'.format(cls)
-            filename = self._get_fl_results_file_template().format(cls)
+            filename = self._get_publiclogo_results_file_template().format(cls)
             with open(filename, 'wt') as f:
                 for im_ind, index in enumerate(self.image_index):
                     dets = all_boxes[cls_ind][im_ind]
@@ -186,23 +202,22 @@ class fl(imdb):
                                        dets[k, 2] + 1, dets[k, 3] + 1))
 
     def evaluate_detections(self, all_boxes, output_dir):
-        self._write_fl_results_file(all_boxes)
+        self._write_publiclogo_results_file(all_boxes)
         rec, prec, map, tp, fp, npos = self._do_python_eval(output_dir)
         if self.config['cleanup']:
             for cls in self._classes:
                 if cls == '__background__':
                     continue
-                filename = self._get_fl_results_file_template().format(cls)
+                filename = self._get_publiclogo_results_file_template().format(cls)
                 os.remove(filename)
         return rec, prec, map, tp, fp, npos
-
 
     def _get_comp_id(self):
         comp_id = (self._comp_id + '_' + self._salt if self.config['use_salt']
             else self._comp_id)
         return comp_id
 
-    def _get_fl_results_file_template(self):
+    def _get_publiclogo_results_file_template(self):
         # INRIAdevkit/results/comp4-44503_det_test_{%s}.txt
         filename = self._get_comp_id() + '_det_' + self._image_set + '_{:s}.txt'
         try:
@@ -237,7 +252,7 @@ class fl(imdb):
         for i, cls in enumerate(self._classes):
             if cls == '__background__':
                 continue
-            filename = self._get_fl_results_file_template().format(cls)
+            filename = self._get_publiclogo_results_file_template().format(cls)
             rec, prec, ap, tpclass, fpclass, nposclass = fl_eval(
                 filename, annopath, imagesetfile, cls, cachedir, ovthresh=0.5)
             if tpclass:
@@ -265,3 +280,4 @@ class fl(imdb):
         print('-- Thanks, The Management')
         print('--------------------------------------------------------------')
         return rec, prec, np.mean(aps), tp, fp, npos
+
