@@ -640,3 +640,4 @@ layer {
   top: "loss_bbox"
   loss_weight: 1
 }
+
